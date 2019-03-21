@@ -1,18 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Flex, WingBlank, Toast } from 'antd-mobile';
+import { Flex, WingBlank, Toast, Switch } from 'antd-mobile';
 import styles from './index.less';
 import {NavBar, Icon} from 'antd-mobile';
 import ListCom from '../../components/ListCom';
 import { isPhoneNum } from '../../utils/utils';
-import { router } from 'sw-toolbox';
 import { routerRedux } from 'dva/router';
+import { getQueryString } from '../../utils/utils';
+import { getLocalStorage, saveLocalStorage } from '../../utils/utils';
 
 class EditAddress extends Component {
   state = {
     receiver: '',
     phone: '',
-    details: ''
+    details: '',
+    isDefault: false,
+    type: '',
+  }
+  componentDidMount() {
+    if(getQueryString('type') === 'edit') {
+      this.setState({type: 'edit'})
+    }
+    if(getLocalStorage('editAddress')) {
+      this.setState({...JSON.parse(getLocalStorage('editAddress'))})
+    }
   }
   onChange = ({value, type}) => {
     if(value) {
@@ -20,7 +31,7 @@ class EditAddress extends Component {
     }
   }
   render() {
-    const {onSave, onBack} = this.props;
+    const {onSave, onBack, onRemove} = this.props;
     const {receiver, phone, details} = this.state;
     return (
       <div className={styles.wrap} direction="column">
@@ -29,14 +40,28 @@ class EditAddress extends Component {
           icon={<Icon type="left" style={{color:'#000'}}/>}
           onLeftClick={onBack}
           rightContent={<span style={{fontSize: 12,color:'#fc8407'}} onClick={()=>onSave({receiver, phone, details})}>保存</span>}
-        >添加收货地址</NavBar>
-          <WingBlank>
-            <Flex direction="column">
-              <ListCom title={'收货人'} type={'receiver'} icon={'iconfont icon-lianxiren'} onChange={this.onChange}/>
-              <ListCom title={'联系方式'}type={'phone'} onChange={this.onChange}/>
-              <ListCom title={'详细地址'} type={'details'} onChange={this.onChange}/>
+        >{this.state.type==='edit'?'添加收货地址':'编辑收货地址'}</NavBar>
+          <Flex className={styles.container}>
+            <Flex direction="column" style={{width:'100%'}}>
+              <ListCom title={'收货人'} value={receiver} type={'receiver'} icon={'iconfont icon-lianxiren'} onChange={this.onChange}/>
+              <ListCom title={'手机号码'} value={phone} type={'phone'} onChange={this.onChange}/>
+              <ListCom title={'详细地址'} value={details} type={'details'} onChange={this.onChange}/>
             </Flex>
-          </WingBlank>
+          </Flex>
+          <Flex className={styles.btnWrap} justify="start" align="start" direction="column">
+            <Flex style={{width:'100%'}} justify="between">
+              <Flex>设为默认地址</Flex>
+              <Switch
+                checked={this.state.isDefault}
+                onChange={() => {
+                  this.setState({
+                    isDefault: !this.state.isDefault,
+                  });
+                }}
+              />
+            </Flex>
+            {this.state.type==='edit'?<Flex className={styles.removeBtn} onClick={()=>onRemove(this.state.id)}>删除收货地址</Flex>:null}
+          </Flex>
       </div>
     )
   }
@@ -46,6 +71,7 @@ function mapDispatch2Props(dispatch) {
   return {
     onBack() {
       window.history.back();
+      saveLocalStorage({type: 'editAddress', value:''})
     },
     onSave(params) {
       const {phone} = params;
@@ -55,6 +81,9 @@ function mapDispatch2Props(dispatch) {
       }else {
         Toast.info('该联系方式不存在')
       }
+    },
+    onRemove(id) {
+      console.log(`删除收货地址${id}`)
     }
   }
 }

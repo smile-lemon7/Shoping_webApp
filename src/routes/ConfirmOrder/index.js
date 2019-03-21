@@ -74,7 +74,10 @@ function mapDispatch2Props(dispatch) {
     onConfirmOrder(params) {
       let {currentAddress, unConfirmOrder} = params;
       unConfirmOrder.address_id = currentAddress.id;
-      console.log(unConfirmOrder)
+      let orderProdArr = unConfirmOrder.orderProdArr;
+      unConfirmOrder.orderProdArr = orderProdArr.map(item => ({id:item.id, count: item.counts}))
+      // console.log(unConfirmOrder)
+      console.log('提交订单，支付')
     },
     onSelectAddress() {
       dispatch(routerRedux.push('/address'))

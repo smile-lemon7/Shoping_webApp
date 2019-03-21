@@ -15,7 +15,7 @@ class AddressPage extends Component {
   render() {
     let { list } = this.props;
     const { onBack, onEdit, onAdd, onSelect } = this.props;
-    list = list.map(item => ({...item, onClick: ()=>onEdit(item.id), onSelect: ()=>onSelect(item)}));
+    list = list.map(item => ({...item, onClick: ()=>onEdit(item), onSelect: ()=>onSelect(item)}));
 
     return (
       <div className={styles.wrap} direction="column">
@@ -72,12 +72,14 @@ function mapDispatch2Props(dispatch) {
     onBack() {
       window.history.back();
     },
-    onEdit(id) {
-      console.log(`编辑地址${id}`)
+    onEdit(item) {
+      // console.log(`编辑地址${id}`)
+      saveLocalStorage({type:'editAddress', value:JSON.stringify(item)})
+      dispatch(routerRedux.push(`/editAddress?type=edit`))
     },
     onAdd() {
       // console.log('添加地址')
-      dispatch(routerRedux.push(`/editAddress`))
+      dispatch(routerRedux.push(`/editAddress?type=add`))
     },
     onSelect(item) {
       saveLocalStorage({type: 'deliveryAddress', value:JSON.stringify(item)});

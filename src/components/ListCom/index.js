@@ -4,16 +4,18 @@ import styles from './index.less';
 
 class ListCom extends Component {
   render() {
-    const {title, icon, other, type, onChange} = this.props;
+    const {title, icon, value, other, type, onChange} = this.props;
     return(
       <WingBlank style={{width: '100%'}}>
         <Flex className={styles.wrap}>
         {type === 'details'?<TextareaItem
+            value={value}
             title=""
             placeholder={title}
             autoHeight
             onBlur={(value)=>onChange({value, type})}
           />:<InputItem
+              value={value}
               type={type==='phone'?type:'receiver'}
               placeholder={title}
               onBlur={(value)=>onChange({value, type})}
