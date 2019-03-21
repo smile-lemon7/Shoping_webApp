@@ -18,6 +18,7 @@ class ProductPanel extends Component {
   }
   render() {
     let { curr_price, old_price, title, cover_img } = this.props.productInfo;
+    let { currentAddress } = this.props;
     const prodParamsLabel = ['生产日期', '产地', '净含量', '包装种类'];
     return (
       <Flex className={styles.wrap} align="start" direction="column">
@@ -40,7 +41,7 @@ class ProductPanel extends Component {
             <Flex className={styles.prod} justify="between">
               <span className={styles.tit}>规格</span>
               <Flex className={styles.prod_R} justify="between">
-                <span>配送至：浦东新区</span>
+                <span>配送至：{currentAddress.area}</span>
                 <Icon type="right" size="xs" color="#888" />
               </Flex>
             </Flex>

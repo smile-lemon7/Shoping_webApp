@@ -14,7 +14,7 @@ class ListCom extends Component {
             autoHeight
             onBlur={(value)=>onChange({value, type})}
           />:<InputItem
-              type={type==='phone'?type:'text'}
+              type={type==='phone'?type:'receiver'}
               placeholder={title}
               onBlur={(value)=>onChange({value, type})}
             />

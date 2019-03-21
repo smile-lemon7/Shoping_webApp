@@ -20,3 +20,12 @@ export function getQueryString(field) {
   var r = params.match(reg);
   if (r != null) return unescape(r[2]); return null;
 }
+
+export function saveLocalStorage({type, value}) {
+  return window.localStorage.setItem(type, value)
+}
+
+export function getLocalStorage(type) {
+  let value = window.localStorage.getItem(type);
+  return value;
+}

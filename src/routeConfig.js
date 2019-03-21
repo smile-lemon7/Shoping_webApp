@@ -7,6 +7,8 @@ import ShopingCartPage from './routes/ShopingCartPage';
 import MinePage from './routes/MinePage';
 import ProductDetailsPage from './routes/ProductDetails';
 import ConfirmOrder from './routes/ConfirmOrder';
+import AddressPage from './routes/Address';
+import EditAddress from './routes/EditAddress';
 
 /**
  * 路由配置
@@ -21,6 +23,14 @@ import ConfirmOrder from './routes/ConfirmOrder';
  */
 export default [
   {
+    path: '/editAddress',
+    canRender: () =>  (getLocalLogin()),
+    component: EditAddress,
+  },{
+    path: '/address',
+    canRender: () =>  (getLocalLogin()),
+    component: AddressPage,
+  },{
     path: '/confirmOrder',
     canRender: () =>  (getLocalLogin()),
     component: ConfirmOrder,
