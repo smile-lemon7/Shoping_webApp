@@ -9,6 +9,7 @@ import ProductDetailsPage from './routes/ProductDetails';
 import ConfirmOrder from './routes/ConfirmOrder';
 import AddressPage from './routes/Address';
 import EditAddress from './routes/EditAddress';
+import MyOrders from './routes/MyOrders';
 
 /**
  * 路由配置
@@ -23,6 +24,10 @@ import EditAddress from './routes/EditAddress';
  */
 export default [
   {
+    path: '/orders',
+    canRender: () =>  (getLocalLogin()),
+    component: MyOrders,
+  },{
     path: '/editAddress',
     canRender: () =>  (getLocalLogin()),
     component: EditAddress,

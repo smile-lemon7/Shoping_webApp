@@ -1,0 +1,51 @@
+@import '../../index.less';
+.wrap {
+  width: 100%;
+  min-height: 100%;
+  background-color: #f1f1f1;
+  :global {
+    .am-tabs-tab-bar-wrap {
+      // margin-top: @topBarHeight;
+      width: 100%;
+      position: fixed;
+      top: @topBarHeight;
+      left: 0;
+      z-index: 10;
+    }
+    .am-tabs-default-bar-top {
+      background-color: #f1f1f1!important;
+    }
+    .am-tabs-default-bar-underline {
+      width: 14%!important;
+      margin-left: 5%;
+      border-color: @tbColor;
+    }
+    .am-tabs-default-bar-tab::after {
+      width: 0!important;
+    }
+    .am-tabs-default-bar-content {
+      width: 100%;
+      // width: 60%;
+      height: 38px;
+      margin: 0 auto;
+    }
+    .am-tabs-default-bar-tab {
+      color: #000;
+      font-size: 13px;
+    }
+    .am-tabs-default-bar-tab-active {
+      font-size: 14px;
+      color: @tbColor;
+    }
+    .am-list-body {
+      height: 210px;
+      overflow: auto;
+    }
+  }
+  .contentWrap {
+    width: 100%;
+    height: auto;
+    margin-top: @topBarHeight*2;
+  }
+
+}

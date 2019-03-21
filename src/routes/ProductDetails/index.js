@@ -20,7 +20,9 @@ class ProductDetailsPage extends Component {
   }
   componentDidMount() {
     // console.log( getQueryString('id') )
-    this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
+    if(getLocalStorage('deliveryAddress')) {
+      this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
+    }
   }
   onAdd = () => {
     this.setState({count: ++this.state.count})

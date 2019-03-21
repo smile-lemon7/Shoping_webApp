@@ -5,7 +5,7 @@ import styles from './Item.less';
 function Item({info}) {
   const {curr_price, title, cover_img, counts, onClick} = info;
   return (
-    <Flex className={styles.card} onClick={onClick}>
+    <Flex className={styles.card} onClick={onClick} justify="between">
       <img src={cover_img[0]} alt={cover_img[0]} />
       <Flex className={styles.CardR} direction="column" align="start">
         <p className={styles.title}>{title}</p>

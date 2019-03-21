@@ -1,29 +1,46 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import { Flex, WingBlank } from 'antd-mobile';
+import { saveLocalStorage } from '../../utils/utils';
 import styles from './index.less';
 
-function HomePage({onDetails, ...props}) {
-  let { list } = props;
-  list = list.map( item => ({...item, onClick: onDetails})) 
-  return (
-    <WingBlank>
-      <Flex className={styles.wrap} align="start">
-        <Flex className={styles.productWrap} align="start" justify="around">
-          {list.map( item => (
-            <Flex key={item.id} className={styles.card} direction="column" justify="around" onClick={()=>item.onClick(item.id)}>
-              <img src={item.cover_img[0]} alt=""/>
-              <Flex className={styles.title}>{item.title}</Flex>
-                <Flex className={styles.priceWrap} justify="start" align="stretch"><Flex className={styles.currentPrice}><span>￥</span><span className={styles.price}>{item.curr_price}</span></Flex>
-                <Flex className={styles.pay_counts}>{item.pay_counts}人付款</Flex></Flex>
-            </Flex>
-          ))
-          }
+class HomePage extends Component {
+  componentDidMount() {
+    const { BMap } = window;
+    let geolocation = new BMap.Geolocation();
+    geolocation.enableSDKLocation();
+    geolocation.getCurrentPosition(function(r){
+    let myGeo = new BMap.Geocoder();      
+    myGeo.getLocation(new BMap.Point(r.point.lng, r.point.lat), function(result){      
+      if (result){      
+        saveLocalStorage({type:'deliveryAddress', value: JSON.stringify({area: result.address})})
+      }      
+    });
+    });
+  }
+  render() {
+    let { list } = this.props;
+    const { onDetails } = this.props;
+    list = list.map( item => ({...item, onClick: onDetails})) 
+    return (
+      <WingBlank>
+        <Flex className={styles.wrap} align="start">
+          <Flex className={styles.productWrap} align="start" justify="around">
+            {list.map( item => (
+              <Flex key={item.id} className={styles.card} direction="column" justify="around" onClick={()=>item.onClick(item.id)}>
+                <img src={item.cover_img[0]} alt=""/>
+                <Flex className={styles.title}>{item.title}</Flex>
+                  <Flex className={styles.priceWrap} justify="start" align="stretch"><Flex className={styles.currentPrice}><span>￥</span><span className={styles.price}>{item.curr_price}</span></Flex>
+                  <Flex className={styles.pay_counts}>{item.pay_counts}人付款</Flex></Flex>
+              </Flex>
+            ))
+            }
+          </Flex>
         </Flex>
-      </Flex>
-    </WingBlank>
-  );
+      </WingBlank>
+    )
+  }
 }
 
 HomePage.defaultProps = {

@@ -46,9 +46,11 @@ class confirmOrder extends Component {
             </Flex>
             <WhiteSpace size="lg" />
             <Flex className={styles.prodWrap} direction="column">
-              {list&&list.map(item=> (
-                <Item info={item} key={item.id} />
-              ))}
+              <Flex direction="column" style={{width:'100%'}} justify="center">
+                {list&&list.map(item=> (
+                  <Item info={item} key={item.id} />
+                ))}
+              </Flex>
             </Flex>
           </WingBlank>
           <Flex justify="end" className={styles.confirmBottom} justify="end">
