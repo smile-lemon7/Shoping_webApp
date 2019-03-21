@@ -1,0 +1,49 @@
+@import '../../index.less';
+.wrap {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+  .baseInfo {
+    width: 100%;
+    background-color: #fff;
+    .price {
+      color: @primaryColor;
+      font-size: 18px;
+      .signMoney, .curr_price_decimal {
+        font-size: 12px;
+        margin-top: 4px;
+      }
+    }
+    .prodTitle {
+      font-size: 13px;
+    }
+  }
+  .bottom {
+    width: 100%;
+    // height: 300px;
+    background-color: #f1f1f1;
+    .prod {
+      box-sizing: border-box;
+      padding: 10px 15px;
+      width: 100%;
+      background-color: #fff;
+      .tit {
+        color: #888;
+        margin-right: 20px;
+      }
+      .prod_R {
+        flex: 1;
+      }
+    }
+    .recommendWrap {
+      width: 100%;
+      height: 120px;
+      background-color: #fff;
+    }
+    .prodDetailWrap {
+      width: 100%;
+      height: 120px;
+      background-color: #fff;
+    }
+  }
+}

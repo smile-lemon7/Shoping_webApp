@@ -1,0 +1,41 @@
+.wrap {
+  width: 100%;
+  height: 100%;
+  .productWrap {
+    width: 100%;
+    .card {
+      width: 40%;
+      height: 200px;
+      border: 1px solid #ccc;
+      img {
+        width: 100px;
+      }
+      .title {
+        width: 80%;
+        color: #888;
+        overflow:hidden; 
+        text-overflow:ellipsis;
+        display:-webkit-box;
+        /* autoprefixer: off */
+        -webkit-box-orient:vertical;
+        /* autoprefixer: on */
+        -webkit-line-clamp:2; 
+      }
+      .priceWrap {
+        width: 80%;
+        font-size: 12px;
+        color: #888;
+        .currentPrice {
+          span {
+            color: #f00;
+            font-size: 12px;
+            &.price {
+              font-size: 20px;
+              margin: 0 8px 6px 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}

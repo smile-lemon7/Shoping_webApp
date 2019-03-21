@@ -5,6 +5,7 @@ import HomePage from './routes/HomePage';
 import ClassesPage from './routes/ClassesPage';
 import ShopingCartPage from './routes/ShopingCartPage';
 import MinePage from './routes/MinePage';
+import ProductDetailsPage from './routes/ProductDetails';
 
 /**
  * 路由配置
@@ -19,6 +20,10 @@ import MinePage from './routes/MinePage';
  */
 export default [
   {
+    path: '/details',
+    canRender: () =>  (getLocalLogin()),
+    component: ProductDetailsPage,
+  },{
     path: '/tabs',
     canRender: () =>  (getLocalLogin()),
     component: Layout,
