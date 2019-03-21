@@ -1,4 +1,10 @@
+import { getLocalLogin } from './utils/user';
 import LoginPage from './routes/LoginPage';
+import Layout from "./layouts/Layout";
+import HomePage from './routes/HomePage';
+import ClassesPage from './routes/ClassesPage';
+import ShopingCartPage from './routes/ShopingCartPage';
+import MinePage from './routes/MinePage';
 
 /**
  * 路由配置
@@ -13,6 +19,28 @@ import LoginPage from './routes/LoginPage';
  */
 export default [
   {
+    path: '/tabs',
+    canRender: () =>  (getLocalLogin()),
+    component: Layout,
+    routes: [
+      {
+        path: '/tabs/index',
+        component: HomePage,
+      },
+      {
+        path: '/tabs/classes',
+        component: ClassesPage,
+      },
+      {
+        path: '/tabs/shopingCart',
+        component: ShopingCartPage,
+      },
+      {
+        path: '/tabs/mine',
+        component: MinePage,
+      },
+    ]
+  },{
     path: '/',
     component: LoginPage,
     canRender: () => true,  // 首页不需要检查准入条件
