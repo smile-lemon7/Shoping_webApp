@@ -6,6 +6,7 @@ import ClassesPage from './routes/ClassesPage';
 import ShopingCartPage from './routes/ShopingCartPage';
 import MinePage from './routes/MinePage';
 import ProductDetailsPage from './routes/ProductDetails';
+import ConfirmOrder from './routes/ConfirmOrder';
 
 /**
  * 路由配置
@@ -20,6 +21,10 @@ import ProductDetailsPage from './routes/ProductDetails';
  */
 export default [
   {
+    path: '/confirmOrder',
+    canRender: () =>  (getLocalLogin()),
+    component: ConfirmOrder,
+  },{
     path: '/details',
     canRender: () =>  (getLocalLogin()),
     component: ProductDetailsPage,
