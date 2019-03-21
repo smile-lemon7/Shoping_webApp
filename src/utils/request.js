@@ -1,4 +1,5 @@
 import fetch from 'dva/fetch';
+import { host } from '../constants';
 
 function parseJSON(response) {
   return response.json();
@@ -21,10 +22,24 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url, options) {
-  return fetch(url, options)
+export default function request_new(url, options={'mode': 'no-cors'}) {
+  
+  const headers = {
+    'Accept': 'application/json',
+    "Content-Type": "application/json"
+  };
+  options.headers = Object.assign(options.headers||{}, headers);
+  options.json && (options.body = JSON.stringify(options.json));
+  console.log("Api-Req: ", options)
+  return fetch(host+url, options)
     .then(checkStatus)
     .then(parseJSON)
-    .then(data => ({ data }))
-    .catch(err => ({ err }));
+    .then(data => {
+      console.log("Api-Res:kkkk", data);
+      return{ data }
+    })
+    .catch(err => {
+      console.warn("Api-Res:", err);
+      return { err }
+    });
 }
