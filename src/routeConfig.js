@@ -11,6 +11,7 @@ import AddressPage from './routes/Address';
 import EditAddress from './routes/EditAddress';
 import MyOrders from './routes/MyOrders';
 import OrderDetails from './routes/OrderDetails';
+import CarouselDetail from './routes/CarouselDetail';
 
 /**
  * 路由配置
@@ -25,6 +26,10 @@ import OrderDetails from './routes/OrderDetails';
  */
 export default [
   {
+    path: '/carouselDetails',
+    canRender: () =>  (getLocalLogin()),
+    component: CarouselDetail,
+  },{
     path: '/orderDetails',
     canRender: () =>  (getLocalLogin()),
     component: OrderDetails,

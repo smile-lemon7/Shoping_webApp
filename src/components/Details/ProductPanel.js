@@ -1,6 +1,6 @@
 import { PropTypes } from 'prop-types';
 import React, { Component } from 'react';
-import CarouselCon from '../Carousel';
+import ProdCarousel from '../ProdCarousel';
 import PricePanel from '../PricePanel';
 import styles from './ProductPanel.less';
 import { Flex, WhiteSpace, WingBlank, Icon, Modal, List, Button } from 'antd-mobile';
@@ -22,7 +22,7 @@ class ProductPanel extends Component {
     const prodParamsLabel = ['生产日期', '产地', '净含量', '包装种类'];
     return (
       <Flex className={styles.wrap} align="start" direction="column">
-        <CarouselCon list={cover_img} />
+        <ProdCarousel list={cover_img} />
         <WhiteSpace />
         <Flex className={styles.baseInfo} direction="column" align="start">
           <WingBlank>

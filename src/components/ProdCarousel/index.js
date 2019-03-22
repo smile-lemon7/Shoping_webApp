@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import {Carousel, Flex} from 'antd-mobile';
 import styles from './index.less';
 
-const CarouselCon = ({ list }) => {
+const ProdCarousel = ({ list }) => {
   const dotStyle = {
     marginBottom: "10px", 
     width: '6px', 
@@ -29,8 +29,7 @@ const CarouselCon = ({ list }) => {
       >
         {list.map((item, index) => (
           <Flex key={index} className={styles.imgWrap} >
-            <img src={item.cover_img} alt={item.cover_img}
-              onClick={item.onClick}
+            <img src={item} alt={item}
               onLoad={() => {
                 window.dispatchEvent(new Event('resize'));
               }}
@@ -41,9 +40,9 @@ const CarouselCon = ({ list }) => {
     </Flex>
   )
 }
-CarouselCon.propTypes = {
+ProdCarousel.propTypes = {
   list: PropTypes.array,
 }
-export default CarouselCon;
+export default ProdCarousel;
 
 
