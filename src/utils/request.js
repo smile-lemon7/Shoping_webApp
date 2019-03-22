@@ -1,5 +1,7 @@
 import fetch from 'dva/fetch';
+
 import { host } from '../constants';
+
 
 function parseJSON(response) {
   return response.json();

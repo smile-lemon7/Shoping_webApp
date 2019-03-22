@@ -32,7 +32,7 @@ export default {
         // });
         // let paramCode = '';
         // paramCode = ""
-			  // for(var i=0;i<4;i++){
+			  // for(var i=0;i<5;i++){
         //   paramCode+=Math.floor(Math.random()*10)
         // }
         // const params = {
@@ -45,11 +45,10 @@ export default {
         //   method: 'POST'
         // };
         // client.request('SendSms', params, requestOption).then((result) => {
-        //   // console.log(result);
         //   const {Code, Message} = result;
         //   if(Message === 'OK') {
-        //     // window.localStorage.setItem('code', Code)
-        //     callback({'code': Code})
+        //     window.localStorage.setItem('code', paramCode)
+        //     callback({'code': paramCode})
         //   }
         // }, (err) => {
         //   console.log(err)
@@ -63,15 +62,12 @@ export default {
 
       const {code, inpCode, phone} = payload;
       if(code === inpCode) {
+        saveLocalLogin({logined: true})
+        const {data} = yield call(loginServices.login, {phone: phone.split(' ').join('')});
         yield put(routerRedux.push('/tabs/index'));
         yield put({type: 'saveLogined', payload: {logined: true}})
-        saveLocalLogin({logined: true})
-        // const {data} = yield call(loginServices.login, {phone: phone.split(' ').join('')})
-        // if(data.msg) {
-        //   yield put(routerRedux.push('/tabs/index'));
-        //   yield put({type: 'saveLogined', payload: {logined: true}})
-        // }
-        yield put({type: 'saveUserInfo', payload:{id: 1,phone: '16239129991',avatar: ''} })
+        // yield put({type: 'saveUserInfo', payload: data })
+        yield put({type: 'saveUserInfo', payload: {id: 1, phone:'13872633111'} })
       }else {
         Toast.info('验证码输入错误')
       }

@@ -5,6 +5,8 @@ import { Flex, WingBlank, WhiteSpace } from 'antd-mobile';
 import { saveLocalStorage } from '../../utils/utils';
 import Carousel from '../../components/Carousel';
 import SearchBar from '../../components/SearchBar';
+import Loading from '../../components/Loading';
+import Title from '../../components/Title';
 import styles from './index.less';
 
 class HomePage extends Component {
@@ -22,29 +24,35 @@ class HomePage extends Component {
     });
   }
   render() {
-    let { list, carouselList } = this.props;
+    let { carouselList, recommend_list, loading } = this.props;
     const { onDetails, onCarousel} = this.props;
-    list = list.map( item => ({...item, onClick: onDetails}));
+    recommend_list = recommend_list.map( item => ({...item, onClick: onDetails}));
     carouselList = carouselList.map(item => ({...item, onClick: ()=>onCarousel(item.id)})); 
 
     return (
       <Flex className={styles.wrap} align="center" direction="column">
-        <WhiteSpace />
         <Flex justify='between' className={styles.searchBox} justify="center">
           <SearchBar />
         </Flex>
-        <WhiteSpace />
-        <Carousel list={carouselList} />
-        <WhiteSpace />
-        <Flex className={styles.productWrap} align="start" justify="around">
-          {list.map( item => (
-            <Flex key={item.id} className={styles.card} direction="column" justify="around" onClick={()=>item.onClick(item.id)}>
-              <img src={item.cover_img[0]} alt=""/>
-              <Flex className={styles.title}>{item.title}</Flex>
-                <Flex className={styles.priceWrap} justify="start" align="stretch"><Flex className={styles.currentPrice}><span>￥</span><span className={styles.price}>{item.curr_price}</span></Flex>
-                <Flex className={styles.pay_counts}>{item.pay_counts}人付款</Flex></Flex>
+        <Flex className={styles.container} direction="column">
+          <WhiteSpace size="lg" />
+          <Carousel list={carouselList} />
+          <WhiteSpace size="lg" />
+          <Title title={"为你推荐"} />
+          {loading?<Loading />:
+            <Flex className={styles.productWrap} align="start" justify="around" wrap="wrap">
+              {recommend_list.map( item => (
+                <Flex key={item.id} className={styles.card} direction="column" justify="around" onClick={()=>item.onClick(item.id)}>
+                  <img src={item.cover_img[0]} alt=""/>
+                  <Flex className={styles.title}>{item.title}</Flex>
+                    <Flex className={styles.priceWrap} justify="between" align="stretch">
+                      <Flex className={styles.currentPrice}><span>￥</span><span className={styles.price}>{item.price}</span></Flex>
+                      <Flex className={styles.pay_counts}>库存：{item.stock}</Flex>
+                  </Flex>
+                </Flex>
+              ))
+              }
             </Flex>
-          ))
           }
         </Flex>
       </Flex>
@@ -76,6 +84,11 @@ HomePage.defaultProps = {
   ]
 };
 
+const mapState2Poprs = ({ products, loading: { effects } }) => ({
+  recommend_list: products.recommend_list,
+  loading: effects['products/query_recommend'],
+})
+
 const mapDispatch2Props = (dispatch) => ({
   onDetails(id) {
     dispatch(routerRedux.push(`/details?id=${id}`))
@@ -85,4 +98,4 @@ const mapDispatch2Props = (dispatch) => ({
   }
 })
 
-export default connect(()=>({}), mapDispatch2Props)(HomePage);
+export default connect(mapState2Poprs, mapDispatch2Props)(HomePage);

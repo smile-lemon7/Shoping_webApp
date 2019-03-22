@@ -5,7 +5,7 @@ import PanelTitle from '../../components/PanelTitle';
 import styles from './index.less';
 
 
-function MinePage({orderIcon, onOrderType, ...props}) {
+function MinePage({orderIcon, onOrderType,onMyAddress, ...props}) {
   orderIcon = orderIcon.map(item => ({...item, onClick:()=>onOrderType(item.id)}))
   return (
    <Flex className={styles.wrap} direction="column" align="start">
@@ -21,6 +21,7 @@ function MinePage({orderIcon, onOrderType, ...props}) {
             ))}
           </Flex>
         </Flex>
+        <Flex onClick={onMyAddress} justify="center">地址管理</Flex>
       </WingBlank>
    </Flex>
   )}
@@ -35,6 +36,9 @@ MinePage.defaultProps = {
 const mapDispatch2Props = (dispatch) => ({
   onOrderType(type) {
     dispatch(routerRedux.push(`/orders?type=${type}`))
+  },
+  onMyAddress() {
+    dispatch(routerRedux.push('/address'));
   }
 
 })

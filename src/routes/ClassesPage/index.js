@@ -32,7 +32,6 @@ class MyOrders extends Component {
     const {onBack} = this.props;
     let { classes } = this.props;
     let { list_all } = this.state;
-    console.log(list_all )
     return (
       <div className={styles.wrap}>
         <Flex justify='between' className={styles.searchBox} justify="center">

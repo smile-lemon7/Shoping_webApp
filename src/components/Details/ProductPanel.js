@@ -17,7 +17,7 @@ class ProductPanel extends Component {
     this.setState({modal: false})
   }
   render() {
-    let { curr_price, old_price, title, cover_img } = this.props.productInfo;
+    let { price, title, cover_img } = this.props.productInfo;
     let { currentAddress } = this.props;
     const prodParamsLabel = ['生产日期', '产地', '净含量', '包装种类'];
     return (
@@ -26,7 +26,7 @@ class ProductPanel extends Component {
         <WhiteSpace />
         <Flex className={styles.baseInfo} direction="column" align="start">
           <WingBlank>
-            <PricePanel price={curr_price} />
+            <PricePanel price={price} />
             <Flex className={styles.prodTitle}>{title}</Flex>
           </WingBlank>
           <Flex className={styles.bottom} direction="column" align="start">
@@ -75,12 +75,12 @@ class ProductPanel extends Component {
                 </List.Item>
               </List>
             </Modal>
-            <WhiteSpace />
-            <Flex className={styles.recommendWrap}>
+            {/* <WhiteSpace /> */}
+            {/* <Flex className={styles.recommendWrap}>
             
-            </Flex>
-            <WhiteSpace />
-            <Flex className={styles.prodDetailWrap}></Flex>
+            </Flex> */}
+            {/* <WhiteSpace /> */}
+            {/* <Flex className={styles.prodDetailWrap}></Flex> */}
           </Flex>
         </Flex>
       </Flex>

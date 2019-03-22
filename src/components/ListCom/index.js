@@ -9,13 +9,13 @@ class ListCom extends Component {
       <WingBlank style={{width: '100%'}}>
         <Flex className={styles.wrap}>
         {type === 'details'?<TextareaItem
-            value={value}
+            defaultValue={value}
             title=""
             placeholder={title}
             autoHeight
             onBlur={(value)=>onChange({value, type})}
           />:<InputItem
-              value={value}
+              defaultValue={value}
               type={type==='phone'?type:'receiver'}
               placeholder={title}
               onBlur={(value)=>onChange({value, type})}

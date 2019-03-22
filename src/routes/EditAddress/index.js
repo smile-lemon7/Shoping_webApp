@@ -31,15 +31,15 @@ class EditAddress extends Component {
     }
   }
   render() {
-    const {onSave, onBack, onRemove} = this.props;
-    const {receiver, phone, details} = this.state;
+    const {onSave, onBack, onRemove, user_id} = this.props;
+    const {receiver, phone, details, isDefault} = this.state;
     return (
       <div className={styles.wrap} direction="column">
         <NavBar
           mode="light"
           icon={<Icon type="left" style={{color:'#000'}}/>}
           onLeftClick={onBack}
-          rightContent={<span style={{fontSize: 12,color:'#fc8407'}} onClick={()=>onSave({receiver, phone, details})}>保存</span>}
+          rightContent={<span style={{fontSize: 12,color:'#fc8407'}} onClick={()=>onSave({receiver, phone, details, user_id, isDefault})}>保存</span>}
         >{this.state.type==='edit'?'添加收货地址':'编辑收货地址'}</NavBar>
           <Flex className={styles.container}>
             <Flex direction="column" style={{width:'100%'}}>
@@ -67,24 +67,28 @@ class EditAddress extends Component {
   }
 }
 
-function mapDispatch2Props(dispatch) {
-  return {
-    onBack() {
-      window.history.back();
-      saveLocalStorage({type: 'editAddress', value:''})
-    },
-    onSave(params) {
-      const {phone} = params;
-      if( isPhoneNum(phone.split(' ').join('')) ) {
-        dispatch(routerRedux.push('/address'))
-        Toast.info('添加成功')
-      }else {
-        Toast.info('该联系方式不存在')
-      }
-    },
-    onRemove(id) {
-      console.log(`删除收货地址${id}`)
+const mapState2Props = ({user, address}) => ({
+  user_id: user.id,
+})
+
+const mapDispatch2Props = (dispatch) => ({
+  onBack() {
+    window.history.back();
+    saveLocalStorage({type: 'editAddress', value:''})
+  },
+  onSave(params) {
+    const {phone} = params;
+    if( isPhoneNum(phone.split(' ').join('')) ) {
+      params.province = 'xx省';
+      params.city = 'xx市';
+      params.area = 'xx区';
+      dispatch({type: 'address/add', payload:params})
+    }else {
+      Toast.info('该联系方式不存在')
     }
-  }
-}
-export default connect(()=>({}), mapDispatch2Props)(EditAddress);
+  },
+  onRemove(id) {
+    console.log(`删除收货地址${id}`)
+  },
+})
+export default connect(mapState2Props, mapDispatch2Props)(EditAddress);

@@ -7,6 +7,7 @@ import DetailsPanel from  '../../components/Details/DetailsPanel';
 import RecommendPanel from  '../../components/Details/RecommendPanel';
 import PricePanel from '../../components/PricePanel';
 import ProdCount from '../../components/ProdCount';
+import Loading from '../../components/Loading';
 import styles from './index.less';
 import { saveLocalStorage, getLocalStorage } from '../../utils/utils';
 import { Flex, Tabs, Button, WingBlank, Modal, List, Icon, NavBar } from 'antd-mobile';
@@ -17,9 +18,11 @@ class ProductDetailsPage extends Component {
     addressModal: false,
     currentAddress: {},
     count: 1,
+    page: 0,
   }
   componentDidMount() {
-    // console.log( getQueryString('id') )
+    const { query } = this.props;
+    query({id: getQueryString('id')});
     if(getLocalStorage('deliveryAddress')) {
       this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
     }
@@ -62,29 +65,31 @@ class ProductDetailsPage extends Component {
     saveLocalStorage({type: 'deliveryAddress', value:JSON.stringify(item)});
     this.setState({addressModal: false})
   }
+  onChange = ({id}) => {
+    this.setState({page: id});
+  }
+
   render() {
-    const tabs = [
-      {title: '商品'}, 
-      {title: '详情'}, 
-      {title: '推荐'},
-    ];
-    const {onBack, onBuy, onSelectAddress} = this.props;
-    let {product, user_id, list} = this.props;
+    
+    const {onBack, onBuy} = this.props;
+    let {product, user_id, list, loading, tabs } = this.props;
     const { id, cover_img, curr_price, stock } = product;
     list = list.map(item => ({...item, onSelect: ()=>this.onSelect(item)}));
     const {count, currentAddress} = this.state;
-
     return (
       <Flex className={styles.wrap} align="start" justify="around">
         <Flex className={styles.backBtn}><img src="/back.png" onClick={onBack}/></Flex>
-        <Tabs tabs={tabs} 
-          swipeable={false}
-          initialPage={0}
-        >
-          <Flex justify="center" className={styles.contentWrap}><ProductPanel productInfo={product} currentAddress={currentAddress}/></Flex>
-          <Flex justify="center"><DetailsPanel /></Flex>
-          <Flex justify="center"><RecommendPanel /></Flex>
-        </Tabs>
+          {JSON.stringify(product)!=='{}'?
+            <Tabs tabs={tabs} 
+              swipeable={false}
+              initialPage={this.state.page}
+              onChange={this.onChange}
+            >
+              <Flex justify="center" className={styles.contentWrap}><ProductPanel productInfo={product} currentAddress={currentAddress}/></Flex>
+              <Flex justify="center" className={styles.contentWrap}><DetailsPanel /></Flex>
+              <Flex justify="center" className={styles.contentWrap}><RecommendPanel /></Flex>
+            </Tabs>: <Loading />
+          }
         <Flex className={styles.bottomWrap} justify="between">
           <Flex direction="column" className={styles.service}>
             <i className="iconfont icon-kefu"></i>
@@ -173,6 +178,11 @@ class ProductDetailsPage extends Component {
 }
 
 ProductDetailsPage.defaultProps = {
+  tabs:[
+    {title: '商品',id: 0}, 
+    {title: '详情', id: 1}, 
+    {title: '推荐', id: 2},
+  ],
   product: {
     id: 1,
     cover_img: ['//m.360buyimg.com/mobilecms/s750x750_jfs/t1/21728/19/10531/172727/5c870f11E85df5c78/e0db5bd83cf435b6.jpg!q80.dpg.webp',
@@ -205,9 +215,11 @@ ProductDetailsPage.defaultProps = {
   ]
 };
 
-function mapState2Props({user}) {
+function mapState2Props({user, products, loading: { effects }}) {
   return {
     user_id: user.id,
+    product: products.product,
+    loading: effects['products/query_product']
   }
 }
 
@@ -223,6 +235,9 @@ function mapDispatch2Props(dispatch) {
       console.log(`立即购买${user_id}`)
       dispatch(routerRedux.push('/confirmOrder'));
     },
+    query(id) {
+      dispatch({type: 'products/query_product', payload: id})
+    }
   }
 }
 export default connect(mapState2Props, mapDispatch2Props)(ProductDetailsPage);

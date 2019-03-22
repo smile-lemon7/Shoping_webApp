@@ -1,8 +1,9 @@
 import { Flex } from 'antd-mobile';
+import styles from './DetailsPanel.less';
 
 function RecommendPanel() {
   return (
-   <Flex>推荐</Flex>
+   <Flex className={styles.wrap} justify="center">推荐</Flex>
   )}
 
 
