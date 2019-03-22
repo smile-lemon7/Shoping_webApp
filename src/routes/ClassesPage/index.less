@@ -1,0 +1,74 @@
+@import '../../index.less';
+.wrap {
+  width: 100%;
+  height: 100%;
+  .searchBox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 4px 3%;
+    background-color: #fff;
+    height: 38px;
+    box-sizing: border-box;
+    z-index: 10;
+  }
+  :global {
+    .am-tabs-tab-bar-wrap {
+      margin-top: @topBarHeight;
+      padding-bottom: 50px;
+    }
+  }
+  // :global {
+    // .am-tabs-tab-bar-wrap {
+    //   // margin-top: @topBarHeight;
+    //   width: 100%;
+    //   // position: fixed;
+    //   // top: 38px;
+    //   // left: 0;
+    //   // z-index: 10;
+    // }
+  //   .am-tabs-default-bar-top {
+  //     background-color: #fff!important;
+  //   }
+    // .am-tabs-default-bar-underline {
+    //   width: 14%!important;
+    //   margin-left: 4%;
+    //   border-color: @tbColor;
+    // }
+    // .am-tabs-default-bar-tab::after {
+    //   width: 0!important;
+    // }
+  //   .am-tabs-default-bar-content {
+  //     width: 100%;
+  //     // width: 60%;
+  //     height: 38px;
+  //     margin: 0 auto;
+  //   }
+  //   .am-tabs-default-bar-tab {
+  //     color: #000;
+  //     font-size: 13px;
+  //   }
+  //   .am-tabs-default-bar-tab-active {
+  //     font-size: 14px;
+  //     color: @tbColor;
+  //   }
+  //   .am-list-body {
+  //     // height: 210px;
+  //     overflow: auto;
+  //   }
+  //   .am-tabs-horizontal .am-tabs-pane-wrap-active {
+  //     height: 100%;
+  //   }
+  // }
+  .contentWrap {
+    width: 100%;
+    height: 100%;
+    // min-height: 100%;
+    // height: auto;
+    // margin-top: @topBarHeight+38px;
+    margin-top: @topBarHeight;
+    overflow: scroll;
+  }
+
+}
