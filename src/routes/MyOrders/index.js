@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { Flex, NavBar, Icon, Tabs } from 'antd-mobile';
 import { getQueryString } from '../../utils/utils';
 import Group from '../../components/OrderGroup/Group';
@@ -22,8 +23,10 @@ class MyOrders extends Component {
       {title: '待发货',id:2},
       {title: '待收货',id:3},
     ];
-    const {onBack} = this.props;
+    const {onBack, onDetails} = this.props;
     let { list, list1 } = this.props;
+    list = list.map(item => ({...item, onClick:()=>onDetails(item.id)}));
+    list1 = list1.map(item => ({...item, onClick:()=>onDetails(item.id)}));
     return (
       <div className={styles.wrap}>
         <NavBar
@@ -123,6 +126,9 @@ MyOrders.defaultProps = {
 const mapDispatch2Props = (dispatch) => ({
   onBack() {
     window.history.back();
+  },
+  onDetails(id) {
+    dispatch(routerRedux.push(`/orderDetails?id=${id}`))
   }
 })
 

@@ -7,7 +7,7 @@ function Group({list, type}) {
   return (
     <Flex className={styles.listWrap} direction="column">
       {list&&list.map(item => (
-        <Flex key={item.id} justify="center" className={styles.panelWrap} direction="column">
+        <Flex key={item.id} justify="center" className={styles.panelWrap} direction="column" onClick={item.onClick}>
           {item.status===1?<Flex className={styles.title} justify="end">等待买家付款</Flex>:null}
           {item.status===2?<Flex className={styles.title} justify="end">买家已付款</Flex>:null}
           {item.status===3?<Flex className={styles.title} justify="end">卖家已发货</Flex>:null}
@@ -19,10 +19,10 @@ function Group({list, type}) {
           </Flex>
           {/** 1：未付款*/}
           {item.status===1?  
-              <Flex className={styles.btnWrap} justify="end">
-                <Button size="small" className={styles.cancelBtn}>取消订单</Button> 
-                <Button size="small" className={styles.payBtn}>付款</Button>
-              </Flex>:null
+            <Flex className={styles.btnWrap} justify="end">
+              <Button size="small" className={styles.cancelBtn}>取消订单</Button> 
+              <Button size="small" className={styles.payBtn}>付款</Button>
+            </Flex>:null
           }
           {/** 2：付款未发货*/}
           {item.status===2?<Flex className={styles.btnWrap} justify="end">
@@ -31,7 +31,6 @@ function Group({list, type}) {
           }
           {item.status===4?<Flex className={styles.btnWrap} justify="end">
               <Button size="small" className={styles.removeBtn}>删除订单</Button>
-
             </Flex>:null
           }
           

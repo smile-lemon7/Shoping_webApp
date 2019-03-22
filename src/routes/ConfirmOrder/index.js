@@ -33,7 +33,7 @@ class confirmOrder extends Component {
           <WingBlank style={{width: '92%'}}>
             <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
               <Flex className={styles.L} justify="center"><i className="iconfont icon-ditu-dibiao" style={{color: '#fff'}}></i></Flex>
-              <Flex className={styles.C} direction="column" align="start">
+              {currentAddress.receiver?<Flex className={styles.C} direction="column" align="start">
                 <Flex className={styles.CT}>
                   <span className={styles.CTL}>{currentAddress.receiver}</span>
                   <span>{currentAddress.phone}</span>
@@ -41,7 +41,9 @@ class confirmOrder extends Component {
                 <Flex className={styles.CB} align="start">
                   <p>{currentAddress.details}</p>
                 </Flex>
-              </Flex>
+              </Flex>:<Flex className={styles.C} direction="column" align="start">请选择收货地址</Flex>
+              }
+              
               <Icon type="right" style={{color:'#000'}} size="md"/>
             </Flex>
             <WhiteSpace size="lg" />
