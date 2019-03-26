@@ -89,7 +89,10 @@ class ProductPanel extends Component {
 }
 
 ProductPanel.propTypes = {
-  productInfo: PropTypes.object
+  productInfo: PropTypes.object,
+  price: PropTypes.number, 
+  title: PropTypes.string, 
+  cover_img: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default ProductPanel;

@@ -9,11 +9,11 @@
   .container {
     width: 100%;
     margin-top: 45px;
-    margin-bottom: 50px;
+    margin-bottom: @tabBarHeight+45px;
     .bottomWrap {
       position: fixed;
       left: 0;
-      bottom: 50px;
+      bottom: 58px;
       width: 100%;
       box-sizing: border-box;
       height: 50px;
@@ -29,7 +29,7 @@
           font-size: 15px;
         }
       }
-      .accounts {
+      .accounts, .rmBtn {
         height: 32px;
         line-height: 32px;
         width: 30%;
@@ -38,6 +38,8 @@
         color: #fff;
         font-size: 14px;
         font-weight: 300;
+      }
+      .rmBtn {
         background-color: @tbColor;
       }
     }
@@ -128,7 +130,7 @@
   }
   :global {
     .am-navbar {
-      background-color: @tbColor;
+      background-color: @topBarColor;
     }
     // .am-navbar {
     //   width: 100%;

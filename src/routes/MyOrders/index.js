@@ -58,7 +58,7 @@ MyOrders.defaultProps = {
         {
           id: 1, 
           cover_img: ['//img12.360buyimg.com/mobilecms/s316x316_jfs/t4843/261/711274114/224176/10cb1af1/58e736ddNc1181853.jpg!q70.dpg.webp'],
-          curr_price: 1,
+          price: 1,
           old_price: 1,
           stock: 20,
           counts: 2,
@@ -66,7 +66,7 @@ MyOrders.defaultProps = {
         },{
           id: 2, 
           cover_img: ['//img11.360buyimg.com/mobilecms/s316x316_jfs/t23020/156/2652121330/409887/b42f9f9e/5b88e069Ne8f1f76d.jpg!q70.dpg.webp'],
-          curr_price: 32,
+          price: 32,
           old_price: 1,
           stock: 10,
           counts: 1,
@@ -74,7 +74,7 @@ MyOrders.defaultProps = {
         },{
           id: 3, 
           cover_img: ['//img11.360buyimg.com/mobilecms/s316x316_jfs/t23020/156/2652121330/409887/b42f9f9e/5b88e069Ne8f1f76d.jpg!q70.dpg.webp'],
-          curr_price: 32,
+          price: 32,
           old_price: 1,
           stock: 10,
           counts: 1,
@@ -89,7 +89,7 @@ MyOrders.defaultProps = {
         {
           id: 3, 
           cover_img: ['//img12.360buyimg.com/mobilecms/s316x316_jfs/t3226/244/1527006044/158729/80570ddc/57cebb81Na9dcc29b.jpg!q70.dpg.webp'],
-          curr_price: 20,
+          price: 20,
           id: 1,
           old_price: 1,
           stock: 10,
@@ -108,7 +108,7 @@ MyOrders.defaultProps = {
         {
           id: 3, 
           cover_img: ['//img12.360buyimg.com/mobilecms/s316x316_jfs/t3226/244/1527006044/158729/80570ddc/57cebb81Na9dcc29b.jpg!q70.dpg.webp'],
-          curr_price: 20,
+          price: 20,
           id: 1,
           old_price: 1,
           stock: 10,

@@ -34,9 +34,9 @@ class MyOrders extends Component {
     let { list_all } = this.state;
     return (
       <div className={styles.wrap}>
-        <Flex justify='between' className={styles.searchBox} justify="center">
+        {/* <Flex justify='between' className={styles.searchBox} justify="center">
           <SearchBar />
-        </Flex>
+        </Flex> */}
         <Tabs tabs={classes} 
           tabBarPosition="left"
           tabDirection="vertical"
@@ -47,7 +47,7 @@ class MyOrders extends Component {
         >
           {list_all.map(item => (
             <Flex key={item.id} justify="center" className={styles.contentWrap}>
-              <Group list={item.prods} />
+              <Group list={item.prods} classes={item.title} />
             </Flex>
           ))
           }

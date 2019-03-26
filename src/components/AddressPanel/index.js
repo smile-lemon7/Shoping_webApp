@@ -1,5 +1,6 @@
 
-import { Flex, WingBlank, WhiteSpace } from 'antd-mobile';
+import { Flex} from 'antd-mobile';
+import PropTypes from 'prop-types';
 import styles from './index.less';
 
 
@@ -25,4 +26,16 @@ const AddressPanel = ({ addressInfo }) => {
   )
 }
 
+AddressPanel.propTypes = {
+  addressInfo: PropTypes.shape({
+    onClick: PropTypes.func,
+    onSelect: PropTypes.func,
+    isDefault: PropTypes.number,
+    receiver: PropTypes.string,
+    area: PropTypes.string,
+    phone: PropTypes.string,
+    details: PropTypes.string,
+  }),
+  
+}
 export default AddressPanel

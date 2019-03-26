@@ -13,7 +13,7 @@ export default {
     logined: false,
     code: '',
     message: '',
-    phone: '',
+    phone: '13829183363',
     id: 1,
   },
 

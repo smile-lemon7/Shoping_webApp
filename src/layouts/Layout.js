@@ -39,7 +39,7 @@ class Layout extends PureComponent {
     return (
       <TabBar
       unselectedTintColor='#949494'
-      tintColor='rgb(241, 138, 138)'
+      tintColor='#13D1BE'
       barTintColor='white'
     >
       {this.tabs.map( (tab, inx) => (

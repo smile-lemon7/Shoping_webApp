@@ -52,6 +52,7 @@ function OrderDetails({onBack, onSelectAddress, ...props}) {
         <Icon type="left" style={{color:'#fff'}} size="md" onClick={onBack}/>
         <span>订单详情</span>
       </Flex>
+    {/* <Flex> */}
       <Flex className={styles.container} direction="column" align="start">
         {statusText[0].value}
         <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
@@ -91,7 +92,9 @@ function OrderDetails({onBack, onSelectAddress, ...props}) {
           <InfoItem title={"发货时间:"} value={info.send_date} /> 
           <InfoItem title={"成交时间:"} value={info.success_date} />
         </Flex>
-        <Flex justify="end" className={styles.confirmBottom} justify="end">
+      </Flex>
+    {/* </Flex> */}
+      <Flex justify="end" className={styles.confirmBottom} justify="end">
           {/** 1：未付款*/}
           {info.status===1?  
             <Flex className={styles.btnWrap} justify="end">
@@ -115,7 +118,6 @@ function OrderDetails({onBack, onSelectAddress, ...props}) {
             </Flex>:null
           }
         </Flex>
-      </Flex>
     </Flex>
   )
 }
@@ -130,7 +132,7 @@ OrderDetails.defaultProps = {
       {
         id: 3, 
         cover_img: ['//img12.360buyimg.com/mobilecms/s316x316_jfs/t3226/244/1527006044/158729/80570ddc/57cebb81Na9dcc29b.jpg!q70.dpg.webp'],
-        curr_price: 20,
+        price: 20,
         id: 1,
         old_price: 1,
         stock: 10,
@@ -139,7 +141,7 @@ OrderDetails.defaultProps = {
       },{
         id: 3, 
         cover_img: ['//img11.360buyimg.com/mobilecms/s316x316_jfs/t23020/156/2652121330/409887/b42f9f9e/5b88e069Ne8f1f76d.jpg!q70.dpg.webp'],
-        curr_price: 32,
+        price: 32,
         old_price: 1,
         stock: 10,
         counts: 1,

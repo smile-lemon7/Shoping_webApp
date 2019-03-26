@@ -1,7 +1,8 @@
 import { Flex } from 'antd-mobile';
+import PropTypes from 'prop-types';
 import styles from './index.less';
 
-export default function InfoItem({title, value}) {
+ function InfoItem({title, value}) {
   return (
     <Flex className={styles.Panel}>
       <span className={styles.title}>{title}</span>
@@ -9,3 +10,9 @@ export default function InfoItem({title, value}) {
     </Flex>
   )
 }
+InfoItem.propTypes = {
+  title: PropTypes.string,
+  value: PropTypes.string,
+}
+
+export default InfoItem;

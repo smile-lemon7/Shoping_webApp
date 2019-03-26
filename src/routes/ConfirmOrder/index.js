@@ -21,6 +21,7 @@ class confirmOrder extends Component {
     const {onBack, onConfirmOrder, onSelectAddress} = this.props;
     let { unConfirmOrder } = this.state;
     let {orderProdArr, sumPrice} = unConfirmOrder;
+    console.log(orderProdArr )
     let list = orderProdArr;
     const { currentAddress } = this.state;
     return (
@@ -29,7 +30,7 @@ class confirmOrder extends Component {
           <Icon type="left" style={{color:'#fff'}} size="md" onClick={onBack}/>
           <span>确认订单</span>
         </Flex>
-        <Flex className={styles.container} direction="column" align="start">
+        <Flex className={styles.container} direction="column" align="center">
           <WingBlank style={{width: '92%'}}>
             <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
               <Flex className={styles.L} justify="center"><i className="iconfont icon-ditu-dibiao" style={{color: '#fff'}}></i></Flex>
@@ -56,7 +57,7 @@ class confirmOrder extends Component {
             </Flex>
           </WingBlank>
           <Flex justify="end" className={styles.confirmBottom} justify="end">
-            <Flex className={styles.sumCounts}>共{4}件</Flex>
+            <Flex className={styles.sumCounts}>共{orderProdArr&&orderProdArr.length}件</Flex>
             <Flex className={styles.sumPrice}>合计: <PricePanel price={sumPrice}/></Flex>
             <Button className={styles.order} size="small" onClick={() => onConfirmOrder({currentAddress, unConfirmOrder})}>提交订单</Button>
           </Flex>
@@ -70,22 +71,29 @@ confirmOrder.defaultProps = {
  
 }
 
-function mapDispatch2Props(dispatch) {
-  return {
-    onBack() {
-      window.history.back();
-    },
-    onConfirmOrder(params) {
-      let {currentAddress, unConfirmOrder} = params;
-      unConfirmOrder.address_id = currentAddress.id;
-      let orderProdArr = unConfirmOrder.orderProdArr;
-      unConfirmOrder.orderProdArr = orderProdArr.map(item => ({id:item.id, count: item.counts}))
-      // console.log(unConfirmOrder)
-      console.log('提交订单，支付')
-    },
-    onSelectAddress() {
-      dispatch(routerRedux.push('/address'))
-    }
+const mapState2Props = ({ order }) => ({
+
+})
+
+const mapDispatch2Props = (dispatch) => ({
+  onBack() {
+    window.history.back();
+  },
+  onConfirmOrder(params) {
+    let {currentAddress, unConfirmOrder} = params;
+    unConfirmOrder.address_id = currentAddress.id;
+    let orderProdArr = unConfirmOrder.orderProdArr;
+    unConfirmOrder.sumprice = unConfirmOrder.sumPrice;
+    delete unConfirmOrder.sumPrice;
+    unConfirmOrder.products = orderProdArr.map(item => ({id:item.id, count: item.counts}));
+    delete unConfirmOrder.orderProdArr;
+
+    // console.log(unConfirmOrder)
+    // console.log('提交订单，支付')
+    dispatch({type: 'order/submitOrder', payload: unConfirmOrder})
+  },
+  onSelectAddress() {
+    dispatch(routerRedux.push('/address'))
   }
-}
-export default connect(()=>({}), mapDispatch2Props)(confirmOrder);
+})
+export default connect(mapState2Props, mapDispatch2Props)(confirmOrder);

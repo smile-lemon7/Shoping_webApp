@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Flex, InputItem, WingBlank, TextareaItem } from 'antd-mobile';
 import styles from './index.less';
 
@@ -28,5 +29,13 @@ class ListCom extends Component {
   }
 }
 
+ListCom.propTypes = {
+  title: PropTypes.string.isRequired,
+  icon: PropTypes.string, 
+  value: PropTypes.string, 
+  other: PropTypes.string, 
+  type: PropTypes.string.isRequired, 
+  onChange: PropTypes.func.isRequired,
+}
 
 export default  ListCom;

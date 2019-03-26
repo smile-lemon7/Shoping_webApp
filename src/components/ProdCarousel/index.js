@@ -41,7 +41,7 @@ const ProdCarousel = ({ list }) => {
   )
 }
 ProdCarousel.propTypes = {
-  list: PropTypes.array,
+  list: PropTypes.arrayOf(PropTypes.string),
 }
 export default ProdCarousel;
 

@@ -1,4 +1,5 @@
 import { Flex } from 'antd-mobile';
+import PropTypes from 'prop-types';
 import Item from '../ProductCom/Item';
 import styles from './Group.less';
 
@@ -14,5 +15,9 @@ function Group({prodList}) {
     </Flex>
   )}
 
-
+Group.propTypes = {
+  prodList: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.number
+  }))
+}
 export default Group;

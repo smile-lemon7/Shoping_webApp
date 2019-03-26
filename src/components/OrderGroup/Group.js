@@ -1,4 +1,5 @@
 import { Flex, Button } from 'antd-mobile';
+import PropTypes from 'prop-types';
 import Item from './Item';
 import PricePanel from '../PricePanel';
 import styles from './Group.less';
@@ -39,5 +40,12 @@ function Group({list, type}) {
     </Flex>
   )}
 
-
+  Group.propTypes = {
+    list: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      status: PropTypes.number,
+      sumPrice: PropTypes.number,
+      orderProdArr: PropTypes.array,
+    }))
+  }
 export default Group;

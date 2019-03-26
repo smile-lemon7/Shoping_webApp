@@ -13,6 +13,7 @@ class ShopingCartPage extends Component {
     selected: [],
     allChecked: false,
     sumPrice: 0,
+    removeFlag: false,
   }
   componentDidMount() {
     let list = this.props.list;
@@ -94,16 +95,25 @@ class ShopingCartPage extends Component {
     e.preventDefault();
     this.props.onProdDetails(id);
   }
+  removeHandle = () => {
+    if(this.state.removeFlag) {
+      this.setState({
+        selected: [],
+        allChecked: false,
+      })
+    }
+    this.setState({removeFlag: !this.state.removeFlag});
+  }
 
   render() {
-    const {onBack, onSettlement} = this.props;
+    const {onBack, onSettlement, onRemove} = this.props;
     let {user_id} = this.props;
-    let {list, selected, allChecked, sumPrice} = this.state;
+    let {list, selected, allChecked, sumPrice, removeFlag} = this.state;
     let orderProdArr = [];
     selected.forEach(item => {
       list.forEach(itm => {
         if(item === itm.id) {
-          sumPrice += itm.curr_price * itm.counts;
+          sumPrice += itm.price * itm.counts;
           orderProdArr.push(itm);
         }
       })
@@ -115,6 +125,8 @@ class ShopingCartPage extends Component {
           mode="light"
           icon={<Icon type="left" style={{color:'#fff'}}/>}
           onLeftClick={onBack}
+          rightContent={removeFlag?<span style={{color:'#fff',fontSize:12}} onClick={this.onRemove} onClick={this.removeHandle}>完成</span>:
+            <span style={{color:'#fff',fontSize:12}} onClick={this.removeHandle}>管理</span>}
         >购物车</NavBar>
         <Flex className={styles.container} direction="column" align="start">
           {list.length>0?
@@ -131,7 +143,7 @@ class ShopingCartPage extends Component {
                       <Flex className={styles.CardR} direction="column" align="start">
                         <p className={styles.title}>{item.title}</p>
                         <Flex justify="between" style={{width:'90%'}}>
-                          <PricePanel price={item.curr_price} />
+                          <PricePanel price={item.price} />
                           <Flex className={styles.count}>
                             <Flex className={`iconfont icon-jian ${styles.L}`} onClick={(e)=>{this.onReduce(e,item)}}></Flex>
                             <Flex className={styles.C}>{item.counts?item.counts: 1}</Flex>
@@ -147,10 +159,14 @@ class ShopingCartPage extends Component {
               }
               <Flex className={styles.bottomWrap} justify="between" align="center">
                 <AgreeItem onChange={this.onChangeSum} checked={allChecked}>全选</AgreeItem>
-                <Flex justify="end" style={{flex:1}}>
-                  <Flex className={styles.sumPrice} justify="end">合计: <PricePanel price={sumPrice} /></Flex>
-                  <Button className={styles.accounts} size="small" onClick={() => onSettlement({orderProdArr, user_id, sumPrice})}>结算</Button>
-                </Flex>
+                {removeFlag?<Flex justify="end" style={{flex:1}}>
+                    <Button className={styles.rmBtn} size="small" onClick={() => onRemove({orderProdArr, user_id})}>删除</Button>
+                  </Flex>:
+                  <Flex justify="end" style={{flex:1}}>
+                    <Flex className={styles.sumPrice} justify="end">合计: <PricePanel price={sumPrice} /></Flex>
+                    <Button type="primary" className={styles.accounts} size="small" onClick={() => onSettlement({orderProdArr, user_id, sumPrice})}>结算</Button>
+                   </Flex>
+                }
               </Flex>
             </Flex>: <Flex style={{width:'100%',height:'100%',marginTop:30}} justify="center">购物车还没有商品，快去添加吧!</Flex>
           }
@@ -165,24 +181,24 @@ class ShopingCartPage extends Component {
         id: 1,
         cover_img: ['//img12.360buyimg.com/mobilecms/s316x316_jfs/t4843/261/711274114/224176/10cb1af1/58e736ddNc1181853.jpg!q70.dpg.webp'],
         title: "法国进口红酒 拉菲（LAFITE）传奇波尔多干红葡萄酒 整箱装 750ml*6瓶（ASC)",
-        curr_price: 1.00,
+        price: 0.1,
         old_price: 1.00,
         stock: 20,
       },{
         id: 2,
         cover_img: ['//img12.360buyimg.com/mobilecms/s316x316_jfs/t3226/244/1527006044/158729/80570ddc/57cebb81Na9dcc29b.jpg!q70.dpg.webp'],
         title: "长城（GreatWall）红酒 特选5年橡木桶解百纳干红葡萄酒 整箱装 750ml*6瓶",
-        curr_price: 2.00,
+        price: 2.00,
         old_price: 2.00,
         stock: 20,
       },{
         id: 3,
         cover_img: ['//img13.360buyimg.com/mobilecms/s316x316_jfs/t1/16873/18/2092/374603/5c18b9bdE95f96d11/723dce42e947842a.jpg!q70.dpg.webp'],
         title: "江左盟 酒库清仓  茅台镇白酒高度酒53度酱香型坛装窖藏老酒纯粮酿造原浆酒自酿 剩800坛",
-        curr_price: 3.00,
+        price: 3.00,
         old_price: 3.00,
         stock: 20,
-      }
+      },
     ]
   }
 
@@ -191,24 +207,32 @@ const mapState2Props = ({user}) => ({
 })
 
 const mapDispatch2Props = (dispatch) => ({
-    onBack() {
-      window.history.back();
-    },
-    onSettlement(params) {
-      let {orderProdArr} = params;
-      if( orderProdArr.length>0) {
-        // console.log( params )
-        saveLocalStorage({type:'unConfirmOrder', value: JSON.stringify(params)})
-        dispatch(routerRedux.push('/confirmOrder'));
-      }else {
-        Toast.info('请选择商品');
-      }
-    },
-    changeCounts(info) {
-      // dispatch({type: 'mall_cart/changeCounts', payload: info})
-    },
-    onProdDetails(id) {
-      dispatch(routerRedux.push(`/details?id=${id}`))
+  onBack() {
+    window.history.back();
+  },
+  onSettlement(params) {
+    let {orderProdArr} = params;
+    if( orderProdArr.length>0) {
+      // console.log( params )
+      saveLocalStorage({type:'unConfirmOrder', value: JSON.stringify(params)})
+      dispatch(routerRedux.push('/confirmOrder'));
+    }else {
+      Toast.info('请选择商品');
     }
+  },
+  changeCounts(info) {
+    // dispatch({type: 'mall_cart/changeCounts', payload: info})
+  },
+  onProdDetails(id) {
+    dispatch(routerRedux.push(`/details?id=${id}`))
+  },
+  onRemove({orderProdArr, user_id}) {
+    let arr = [];
+    orderProdArr = orderProdArr.forEach(item => {
+      arr.push(item.id)
+    })
+    // console.log(arr)
+    // console.log(user_id)
+  }
 })
 export default connect(mapState2Props, mapDispatch2Props)(ShopingCartPage);

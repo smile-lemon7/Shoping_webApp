@@ -73,7 +73,7 @@ class ProductDetailsPage extends Component {
     
     const {onBack, onBuy} = this.props;
     let {product, user_id, list, loading, tabs } = this.props;
-    const { id, cover_img, curr_price, stock } = product;
+    const { id, cover_img, price, stock } = product;
     list = list.map(item => ({...item, onSelect: ()=>this.onSelect(item)}));
     const {count, currentAddress} = this.state;
     return (
@@ -97,7 +97,7 @@ class ProductDetailsPage extends Component {
           </Flex>
           <Flex className={styles.bottomBtnWrap} justify="end">  
             <Button className={styles.cart} size="small" onClick={this.showModal}>加入购物车</Button>
-            <Button className={styles.buy} size="small" onClick={()=>onBuy({user_id, id})}>立即购买</Button>
+            <Button className={styles.buy} size="small" onClick={()=>onBuy({user_id, product})}>立即购买</Button>
           </Flex>
           <Modal
               popup
@@ -109,7 +109,7 @@ class ProductDetailsPage extends Component {
                 <List style={{height: 410}} renderHeader={() => <Flex className={styles.modalTop}>
                     <img src={cover_img[0]} alt={cover_img[0]} width="120" style={{marginRight: 10}} />
                     <Flex direction="column" align="start" justify="around" style={{height: 80}}>
-                      <PricePanel price={curr_price} />
+                      <PricePanel price={price} />
                       <Flex style={{fontSize: 12}}>库存<span>{stock}</span>件</Flex>
                       {/* <Flex style={{fontSize: 12, color: '#000'}}>配送至：<span>{currentAddress.area}</span></Flex> */}
                     </Flex>
@@ -191,7 +191,7 @@ ProductDetailsPage.defaultProps = {
                 '//m.360buyimg.com/mobilecms/s843x843_jfs/t1/28304/9/9631/611913/5c7f7f91E8c60fe4a/95279b064009f8f0.jpg!q70.dpg.webp'
                 ],
     title: "贵州茅台镇张义斋酱香型白酒纯粮食酿造高度高粱酒陈年老酒500ML",
-    curr_price: 1.00,
+    price: 1.00,
     old_price: 1.00,
     stock: 20,
   },
@@ -231,8 +231,11 @@ function mapDispatch2Props(dispatch) {
     onCart({user_id}) {
       console.log(`加入购物车成功${user_id}`)
     },
-    onBuy({user_id}) {
-      console.log(`立即购买${user_id}`)
+    onBuy({user_id, product}) {
+      product.counts = 1;
+      let arr = [];
+      arr.push(product);
+      saveLocalStorage({type: 'unConfirmOrder', value: JSON.stringify({user_id, sumPrice: product.price, orderProdArr: arr})})
       dispatch(routerRedux.push('/confirmOrder'));
     },
     query(id) {

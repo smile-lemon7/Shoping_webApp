@@ -17,13 +17,14 @@ class EditAddress extends Component {
     isDefault: false,
     type: '',
   }
-  componentDidMount() {
+  componentWillMount() {
     if(getQueryString('type') === 'edit') {
-      this.setState({type: 'edit'})
+      this.setState({type: 'edit'});
+      if(getLocalStorage('editAddress')) {
+        this.setState({...JSON.parse(getLocalStorage('editAddress'))})
+      }
     }
-    if(getLocalStorage('editAddress')) {
-      this.setState({...JSON.parse(getLocalStorage('editAddress'))})
-    }
+    
   }
   onChange = ({value, type}) => {
     if(value) {
@@ -33,6 +34,7 @@ class EditAddress extends Component {
   render() {
     const {onSave, onBack, onRemove, user_id} = this.props;
     const {receiver, phone, details, isDefault} = this.state;
+
     return (
       <div className={styles.wrap} direction="column">
         <NavBar

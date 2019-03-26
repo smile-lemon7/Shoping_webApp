@@ -1,5 +1,6 @@
 import { Flex } from 'antd-mobile';
 import styles from './index.less';
+import PropTypes from 'prop-types';
 
 function ProdCount({count, onAdd, onReduce}) {
   return (
@@ -10,5 +11,9 @@ function ProdCount({count, onAdd, onReduce}) {
     </Flex>
   )}
 
-
+ProdCount.prototype = {
+  count: PropTypes.number,
+  onAdd: PropTypes.func,
+  onReduce: PropTypes.func
+}
 export default ProdCount;

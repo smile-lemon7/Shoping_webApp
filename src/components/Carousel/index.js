@@ -42,7 +42,10 @@ const CarouselCon = ({ list }) => {
   )
 }
 CarouselCon.propTypes = {
-  list: PropTypes.array,
+  list: PropTypes.arrayOf(PropTypes.shape({
+    cover_img: PropTypes.string,
+    onClick: PropTypes.func,
+  })),
 }
 export default CarouselCon;
 
