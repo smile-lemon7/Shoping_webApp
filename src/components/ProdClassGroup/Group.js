@@ -6,11 +6,11 @@ import Item from './Item.js';
 
 function Group({list, classes}) {
   return (
-    <WingBlank size="lg">
+    <WingBlank size="lg" style={{width: '92%'}}>
       <Flex className={styles.wrap} wrap="wrap" justify="between">
         <TitleCom title={classes} />
         {list&&list.map(item => (
-          <Item {...item} key={item.id} />
+          <Item prodInfo={item} key={item.id} />
         ))
         }
       </Flex>

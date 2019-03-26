@@ -20,6 +20,8 @@ app.model(require('./models/user').default);
 app.model(require('./models/products').default);
 app.model(require('./models/address').default);
 app.model(require('./models/order').default);
+app.model(require('./models/shopingCart').default);
+
 
 
 // 4. Router

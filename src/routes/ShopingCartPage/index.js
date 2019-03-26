@@ -3,6 +3,8 @@ import { connect } from 'dva';
 import { routerRedux } from 'dva/router';
 import PricePanel from '../../components/PricePanel';
 import { saveLocalStorage } from '../../utils/utils';
+import Loading from '../../components/Loading';
+import cartServices from '../../services/shopingCart';
 import { Flex, NavBar, Icon, Button, Checkbox, Toast } from 'antd-mobile';
 import styles from './index.less';
 const AgreeItem = Checkbox.AgreeItem;
@@ -15,10 +17,11 @@ class ShopingCartPage extends Component {
     sumPrice: 0,
     removeFlag: false,
   }
-  componentDidMount() {
-    let list = this.props.list;
-    list = list.map(item=>({...item, counts: 1}));
-    this.setState({list: list})
+  async componentWillMount() {
+    const {user_id} = this.props;
+    let { data:list } = await cartServices.query({user_id});
+    this.setState({list});
+    // this.props.query({user_id});
   }
   onChangeSum = (e) => {
     let { list } = this.props;
@@ -66,27 +69,29 @@ class ShopingCartPage extends Component {
     }
   }
   onReduce = (e, item) => {
+    const { user_id, reduceCounts } = this.props;
     e.preventDefault();
     let list = this.state.list;
     list.forEach(itm => {
       if(itm.id === item.id) {
         if( itm.counts > 1 ) {
           itm.counts -= 1;
+          reduceCounts({user_id, pro_id:itm.id, number:1});
         }else {
           itm.counts = 1;
         }
-        this.props.changeCounts({id:itm.id,counts:itm.counts});
       }
     })
     this.setState({list})
   }
   onAdd = (e, item) => {
+    const { user_id, addCounts } = this.props;
     e.preventDefault();
     let list = this.state.list;
     list.forEach(itm => {
       if(itm.id === item.id) {
         itm.counts += 1;
-        this.props.changeCounts({id:itm.id,counts:itm.counts});
+        addCounts({user_id, pro_id:itm.id, number:1});
       }
     })
     this.setState({list})
@@ -105,8 +110,16 @@ class ShopingCartPage extends Component {
     this.setState({removeFlag: !this.state.removeFlag});
   }
 
+  onRemove = async ({orderProdArr, user_id}) => {
+    for(let item of orderProdArr) {
+      await cartServices.del({user_id, id: item.id});
+    }
+    let { data:list } = await cartServices.query({user_id});
+    this.setState({list});
+  }
+
   render() {
-    const {onBack, onSettlement, onRemove} = this.props;
+    const {onBack, onSettlement} = this.props;
     let {user_id} = this.props;
     let {list, selected, allChecked, sumPrice, removeFlag} = this.state;
     let orderProdArr = [];
@@ -125,52 +138,52 @@ class ShopingCartPage extends Component {
           mode="light"
           icon={<Icon type="left" style={{color:'#fff'}}/>}
           onLeftClick={onBack}
-          rightContent={removeFlag?<span style={{color:'#fff',fontSize:12}} onClick={this.onRemove} onClick={this.removeHandle}>完成</span>:
+          rightContent={removeFlag?<span style={{color:'#fff',fontSize:12}} onClick={this.removeHandle}>完成</span>:
             <span style={{color:'#fff',fontSize:12}} onClick={this.removeHandle}>管理</span>}
         >购物车</NavBar>
-        <Flex className={styles.container} direction="column" align="start">
-          {list.length>0?
-            <Flex className={styles.panel} direction="column">
-              {list.map(item => (
-                <Flex className={styles.card} key={item.id}>
-                  <AgreeItem 
-                    ref={`item_${item.id}`}
-                    checked={selected.includes(item.id)}
-                    onChange={() => this.onChangeItem(item.id)}
-                    >
-                    <Flex style={{width: '100%'}}>
-                      <img src={item.cover_img[0]} alt={item.cover_img[0]} onClick={(e)=>{this.onProdDetails(e, item.id)}} />
-                      <Flex className={styles.CardR} direction="column" align="start">
-                        <p className={styles.title}>{item.title}</p>
-                        <Flex justify="between" style={{width:'90%'}}>
-                          <PricePanel price={item.price} />
-                          <Flex className={styles.count}>
-                            <Flex className={`iconfont icon-jian ${styles.L}`} onClick={(e)=>{this.onReduce(e,item)}}></Flex>
-                            <Flex className={styles.C}>{item.counts?item.counts: 1}</Flex>
-                            <Flex className={`iconfont icon-jia ${styles.R}`} onClick={(e)=>{this.onAdd(e,item)}}></Flex>
+          <Flex className={styles.container} direction="column" align="start">
+            {list.length>0?
+              <Flex className={styles.panel} direction="column">
+                {list.map(item => (
+                  <Flex className={styles.card} key={item.id}>
+                    <AgreeItem 
+                      ref={`item_${item.id}`}
+                      checked={selected.includes(item.id)}
+                      onChange={() => this.onChangeItem(item.id)}
+                      >
+                      <Flex style={{width: '100%'}}>
+                        <img src={item.cover_img[0]} alt={item.cover_img[0]} onClick={(e)=>{this.onProdDetails(e, item.id)}} />
+                        <Flex className={styles.CardR} direction="column" align="start">
+                          <p className={styles.title}>{item.title}</p>
+                          <Flex justify="between" style={{width:'90%'}}>
+                            <PricePanel price={item.price} />
+                            <Flex className={styles.count}>
+                              <Flex className={`iconfont icon-jian ${styles.L}`} onClick={(e)=>{this.onReduce(e,item)}}></Flex>
+                              <Flex className={styles.C}>{item.counts?item.counts: 1}</Flex>
+                              <Flex className={`iconfont icon-jia ${styles.R}`} onClick={(e)=>{this.onAdd(e,item)}}></Flex>
+                            </Flex>
+                            {/* <ProdCount addCount={item.onAddCount} reduceCount={item.onReduceCount} counts={item.counts} /> */}
                           </Flex>
-                          {/* <ProdCount addCount={item.onAddCount} reduceCount={item.onReduceCount} counts={item.counts} /> */}
                         </Flex>
                       </Flex>
-                    </Flex>
-                  </AgreeItem>
-                </Flex>
-              ))
-              }
-              <Flex className={styles.bottomWrap} justify="between" align="center">
-                <AgreeItem onChange={this.onChangeSum} checked={allChecked}>全选</AgreeItem>
-                {removeFlag?<Flex justify="end" style={{flex:1}}>
-                    <Button className={styles.rmBtn} size="small" onClick={() => onRemove({orderProdArr, user_id})}>删除</Button>
-                  </Flex>:
-                  <Flex justify="end" style={{flex:1}}>
-                    <Flex className={styles.sumPrice} justify="end">合计: <PricePanel price={sumPrice} /></Flex>
-                    <Button type="primary" className={styles.accounts} size="small" onClick={() => onSettlement({orderProdArr, user_id, sumPrice})}>结算</Button>
-                   </Flex>
+                    </AgreeItem>
+                  </Flex>
+                ))
                 }
-              </Flex>
-            </Flex>: <Flex style={{width:'100%',height:'100%',marginTop:30}} justify="center">购物车还没有商品，快去添加吧!</Flex>
-          }
-        </Flex>
+                <Flex className={styles.bottomWrap} justify="between" align="center">
+                  <AgreeItem onChange={this.onChangeSum} checked={allChecked}>全选</AgreeItem>
+                  {removeFlag?<Flex justify="end" style={{flex:1}}>
+                      <Button className={styles.rmBtn} size="small" onClick={() => this.onRemove({orderProdArr, user_id})}>删除</Button>
+                    </Flex>:
+                    <Flex justify="end" style={{flex:1}}>
+                      <Flex className={styles.sumPrice} justify="end">合计: <PricePanel price={sumPrice} /></Flex>
+                      <Button type="primary" className={styles.accounts} size="small" onClick={() => onSettlement({orderProdArr, user_id, sumPrice})}>结算</Button>
+                     </Flex>
+                  }
+                </Flex>
+              </Flex>: <Flex style={{width:'100%',height:'100%',marginTop:30}} justify="center">购物车还没有商品，快去添加吧!</Flex>
+            }
+          </Flex>
       </div>
     )}
   }
@@ -202,7 +215,7 @@ class ShopingCartPage extends Component {
     ]
   }
 
-const mapState2Props = ({user}) => ({
+const mapState2Props = ({user, cart}) => ({
   user_id: user.id,
 })
 
@@ -220,19 +233,14 @@ const mapDispatch2Props = (dispatch) => ({
       Toast.info('请选择商品');
     }
   },
-  changeCounts(info) {
-    // dispatch({type: 'mall_cart/changeCounts', payload: info})
+  addCounts(info) {
+    dispatch({type: 'cart/addCounts', payload: info})
+  },
+  reduceCounts(info) {
+    dispatch({type: 'cart/reduceCounts', payload: info})
   },
   onProdDetails(id) {
     dispatch(routerRedux.push(`/details?id=${id}`))
   },
-  onRemove({orderProdArr, user_id}) {
-    let arr = [];
-    orderProdArr = orderProdArr.forEach(item => {
-      arr.push(item.id)
-    })
-    // console.log(arr)
-    // console.log(user_id)
-  }
 })
 export default connect(mapState2Props, mapDispatch2Props)(ShopingCartPage);

@@ -66,8 +66,8 @@ export default {
         const {data} = yield call(loginServices.login, {phone: phone.split(' ').join('')});
         yield put(routerRedux.push('/tabs/index'));
         yield put({type: 'saveLogined', payload: {logined: true}})
-        // yield put({type: 'saveUserInfo', payload: data })
-        yield put({type: 'saveUserInfo', payload: {id: 1, phone:'13872633111'} })
+        yield put({type: 'saveUserInfo', payload: data })
+        // yield put({type: 'saveUserInfo', payload: {id: 1, phone:'13872633111'} })
       }else {
         Toast.info('验证码输入错误')
       }

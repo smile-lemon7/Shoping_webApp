@@ -3,15 +3,16 @@ import PricePanel from '../PricePanel';
 import PropTypes from 'prop-types';
 import styles from './ProdItem.less';
 
-function ProdItem({id, cover_img, title, pay_counts, price, onClick}) {
+function ProdItem({id, cover_img, content, name, pay_counts, stock, price, onClick}) {
   return (
-    <Flex key={id} className={styles.card} direction="column" justify="around" onClick={onClick}>
+    <Flex key={id} className={styles.card} direction="column" justify="center" onClick={onClick}>
       <img src={cover_img[0]} alt=""/>
-      <Flex className={styles.title}>{title}</Flex>
+      <Flex className={styles.title}>{name}</Flex>
         <Flex className={styles.priceWrap} justify="between" align="stretch">
           {/* <Flex className={curr_price}><span>￥</span><span className={styles.price}>{curr_price}</span></Flex> */}
-          <PricePanel price={price} />
-          <Flex className={styles.pay_counts}>{2}人付款</Flex>
+          <PricePanel price={price} size={15} oth_size={12}/>
+          {/* <Flex className={styles.pay_counts}>{2}人付款</Flex> */}
+          <Flex className={styles.pay_counts}>库存{stock}</Flex>
         </Flex>
     </Flex>
   )
@@ -25,4 +26,4 @@ ProdItem.propTypes = {
   price: PropTypes.number, 
   onClick: PropTypes.func,
 }
-export default PropTypes;
+export default ProdItem;

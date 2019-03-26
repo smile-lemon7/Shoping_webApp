@@ -9,6 +9,7 @@ import PricePanel from '../../components/PricePanel';
 import ProdCount from '../../components/ProdCount';
 import Loading from '../../components/Loading';
 import styles from './index.less';
+import addressServices from '../../services/address';
 import { saveLocalStorage, getLocalStorage } from '../../utils/utils';
 import { Flex, Tabs, Button, WingBlank, Modal, List, Icon, NavBar } from 'antd-mobile';
 
@@ -20,12 +21,14 @@ class ProductDetailsPage extends Component {
     count: 1,
     page: 0,
   }
-  componentDidMount() {
-    const { query } = this.props;
+  async componentDidMount() {
+    const { query, user_id } = this.props;
     query({id: getQueryString('id')});
     if(getLocalStorage('deliveryAddress')) {
       this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
     }
+    // const { data } = addressServices.query({user_id});
+    // console.log(data)
   }
   onAdd = () => {
     this.setState({count: ++this.state.count})
@@ -75,6 +78,7 @@ class ProductDetailsPage extends Component {
     let {product, user_id, list, loading, tabs } = this.props;
     const { id, cover_img, price, stock } = product;
     list = list.map(item => ({...item, onSelect: ()=>this.onSelect(item)}));
+    console.log(list)
     const {count, currentAddress} = this.state;
     return (
       <Flex className={styles.wrap} align="start" justify="around">
@@ -133,7 +137,8 @@ class ProductDetailsPage extends Component {
                 </List>
                 <Button 
                   type="primary" 
-                  onClick={()=>this.cartHandle({user_id, prod_id:id, count, address_id: currentAddress.id})} 
+                  // onClick={()=>this.cartHandle({user_id, prod_id:id, count, address_id: currentAddress.id})} 
+                  onClick={()=>this.cartHandle({user_id, prod_id:id, count, address_id: 22})} 
                   style={{height: '40px',lineHeight: '40px',fontSize: 13,color:'#fff',marginBottom:20,borderRadius: 20}}>确定</Button>
               </WingBlank>
             </Modal>
@@ -205,7 +210,7 @@ ProductDetailsPage.defaultProps = {
       receiver: '李文',
     },
     {
-      id: 2,
+      id: 22,
       area: '上海 上海市 浦东新区 蒲兴路街道2',
       details: '上海市浦东新区 xxx小区 博兴路 xx弄 xx号xxx2',
       isDefault: false,
@@ -215,7 +220,7 @@ ProductDetailsPage.defaultProps = {
   ]
 };
 
-function mapState2Props({user, products, loading: { effects }}) {
+function mapState2Props({user, products, cart, loading: { effects }}) {
   return {
     user_id: user.id,
     product: products.product,
@@ -228,8 +233,8 @@ function mapDispatch2Props(dispatch) {
     onBack() {
       window.history.back();
     },
-    onCart({user_id}) {
-      console.log(`加入购物车成功${user_id}`)
+    onCart({user_id, prod_id, count, address_id}) {
+      dispatch({type: 'cart/addCart', payload: {user_id, pro_id: prod_id, number: count, address_id}});
     },
     onBuy({user_id, product}) {
       product.counts = 1;
