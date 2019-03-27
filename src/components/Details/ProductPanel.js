@@ -2,6 +2,8 @@ import { PropTypes } from 'prop-types';
 import React, { Component } from 'react';
 import ProdCarousel from '../ProdCarousel';
 import PricePanel from '../PricePanel';
+import ImgContainer from '../ImgContainer';
+import Title from '../../components/Title';
 import styles from './ProductPanel.less';
 import { Flex, WhiteSpace, WingBlank, Icon, Modal, List, Button } from 'antd-mobile';
 
@@ -17,8 +19,8 @@ class ProductPanel extends Component {
     this.setState({modal: false})
   }
   render() {
-    let { price, title, cover_img } = this.props.productInfo;
-    let { currentAddress } = this.props;
+    let { price, title, cover_img, content, sameProducts } = this.props.productInfo;
+    let { currentAddress, onDetails } = this.props;
     const prodParamsLabel = ['生产日期', '产地', '净含量', '包装种类'];
     return (
       <Flex className={styles.wrap} align="start" direction="column">
@@ -41,7 +43,7 @@ class ProductPanel extends Component {
             <Flex className={styles.prod} justify="between">
               <span className={styles.tit}>规格</span>
               <Flex className={styles.prod_R} justify="between">
-                <span>配送至：{currentAddress.area}</span>
+                <span>配送至：{JSON.stringify(currentAddress)!=='{}'?currentAddress.details:'请添加地址'}</span>
                 <Icon type="right" size="xs" color="#888" />
               </Flex>
             </Flex>
@@ -75,12 +77,28 @@ class ProductPanel extends Component {
                 </List.Item>
               </List>
             </Modal>
-            {/* <WhiteSpace /> */}
-            {/* <Flex className={styles.recommendWrap}>
-            
-            </Flex> */}
-            {/* <WhiteSpace /> */}
-            {/* <Flex className={styles.prodDetailWrap}></Flex> */}
+            <WhiteSpace /> 
+            <Title title={'商品详情'} bgColor={'#f1f1f1'} />
+            <WhiteSpace /> 
+            <Flex className={styles.prodDetailWrap} align="center" justify="start" direction="column">
+              <ImgContainer content={content} />
+            </Flex>
+            <WhiteSpace />
+            <Title title={'看了又看'} bgColor={'#f1f1f1'} />
+            <WhiteSpace />
+            <Flex className={styles.recommendWrap} align="start" justify="between" wrap="wrap">
+              {sameProducts.map(item => (
+                <Flex key={item.id} className={styles.card} direction="column" justify="around" onClick={()=>onDetails(item.id)}>
+                  <img src={item.cover_img[0]} alt=""/>
+                  <Flex className={styles.title}>{item.title}</Flex>
+                    <Flex className={styles.priceWrap} justify="between" align="stretch">
+                      <Flex className={styles.currentPrice} justify="between" align="stretch"><PricePanel price={item.price} size={15} oth_size={12} /></Flex>
+                      <Flex className={styles.pay_counts}>库存{item.stock}</Flex>
+                  </Flex>
+                </Flex>
+              ))
+              }
+            </Flex>
           </Flex>
         </Flex>
       </Flex>

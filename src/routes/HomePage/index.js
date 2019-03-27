@@ -4,6 +4,7 @@ import { routerRedux } from 'dva/router';
 import { Flex, WingBlank, WhiteSpace } from 'antd-mobile';
 import { saveLocalStorage, getLocalStorage } from '../../utils/utils';
 import Carousel from '../../components/Carousel';
+import addressServices from '../../services/address';
 import PricePanel from '../../components/PricePanel';
 import SearchBar from '../../components/SearchBar';
 import Loading from '../../components/Loading';
@@ -11,21 +12,28 @@ import Title from '../../components/Title';
 import styles from './index.less';
 
 class HomePage extends Component {
-  componentDidMount() {
-    const { phone } = this.props;
-    const { BMap } = window;
-    let geolocation = new BMap.Geolocation();
-    geolocation.enableSDKLocation();
-    geolocation.getCurrentPosition(function(r){
-    let myGeo = new BMap.Geocoder();      
-    myGeo.getLocation(new BMap.Point(r.point.lng, r.point.lat), function(result){      
-      if (result){      
-        if(!getLocalStorage('deliveryAddress')) {
-          saveLocalStorage({type:'deliveryAddress', value: JSON.stringify({area: result.address})})
-        }
-      }      
-    });
-    });
+  async componentDidMount() {
+    // const { BMap } = window;
+    // let geolocation = new BMap.Geolocation();
+    // geolocation.enableSDKLocation();
+    // geolocation.getCurrentPosition(function(r){
+    // let myGeo = new BMap.Geocoder();      
+    // myGeo.getLocation(new BMap.Point(r.point.lng, r.point.lat), function(result){      
+    //   if (result){      
+    //     if(!getLocalStorage('deliveryAddress')) {
+    //       saveLocalStorage({type:'deliveryAddress', value: JSON.stringify({area: result.address})})
+    //     }
+    //   }      
+    // });
+    // });
+    const { user_id } = this.props;
+    const { data } = await addressServices.query_all({user_id});
+    if( data.length >0 ) {
+      let currect_address = data.filter(item => {return item.isDefault});
+      currect_address = currect_address.length>0?currect_address[0]:data[0];
+      saveLocalStorage({type:'deliveryAddress', value: JSON.stringify(currect_address)})
+      saveLocalStorage({type:'address', value: JSON.stringify(data)})
+    }
   }
   render() {
     let { carouselList, recommend_list, loading } = this.props;
@@ -90,7 +98,8 @@ HomePage.defaultProps = {
   ]
 };
 
-const mapState2Poprs = ({ products, loading: { effects } }) => ({
+const mapState2Poprs = ({ user, products, loading: { effects } }) => ({
+  user_id: user.id,
   recommend_list: products.recommend_list,
   loading: effects['products/query_recommend'],
 })

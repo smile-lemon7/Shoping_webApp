@@ -16,12 +16,13 @@ class ShopingCartPage extends Component {
     allChecked: false,
     sumPrice: 0,
     removeFlag: false,
+    loading: true,
   }
   async componentWillMount() {
     const {user_id} = this.props;
     let { data:list } = await cartServices.query({user_id});
-    this.setState({list});
-    // this.props.query({user_id});
+    list?this.setState({list, loading: false}): this.setState({loading: true});
+    // this.setState({list});
   }
   onChangeSum = (e) => {
     let { list } = this.props;
@@ -121,7 +122,7 @@ class ShopingCartPage extends Component {
   render() {
     const {onBack, onSettlement} = this.props;
     let {user_id} = this.props;
-    let {list, selected, allChecked, sumPrice, removeFlag} = this.state;
+    let {list, selected, allChecked, sumPrice, removeFlag, loading} = this.state;
     let orderProdArr = [];
     selected.forEach(item => {
       list.forEach(itm => {
@@ -141,6 +142,7 @@ class ShopingCartPage extends Component {
           rightContent={removeFlag?<span style={{color:'#fff',fontSize:12}} onClick={this.removeHandle}>完成</span>:
             <span style={{color:'#fff',fontSize:12}} onClick={this.removeHandle}>管理</span>}
         >购物车</NavBar>
+        {loading?<Flex style={{paddingTop:'45px',height:'100%'}} justify="center"><Loading /></Flex>:
           <Flex className={styles.container} direction="column" align="start">
             {list.length>0?
               <Flex className={styles.panel} direction="column">
@@ -178,12 +180,13 @@ class ShopingCartPage extends Component {
                     <Flex justify="end" style={{flex:1}}>
                       <Flex className={styles.sumPrice} justify="end">合计: <PricePanel price={sumPrice} /></Flex>
                       <Button type="primary" className={styles.accounts} size="small" onClick={() => onSettlement({orderProdArr, user_id, sumPrice})}>结算</Button>
-                     </Flex>
+                    </Flex>
                   }
                 </Flex>
               </Flex>: <Flex style={{width:'100%',height:'100%',marginTop:30}} justify="center">购物车还没有商品，快去添加吧!</Flex>
             }
           </Flex>
+        }
       </div>
     )}
   }
@@ -230,7 +233,7 @@ const mapDispatch2Props = (dispatch) => ({
       saveLocalStorage({type:'unConfirmOrder', value: JSON.stringify(params)})
       dispatch(routerRedux.push('/confirmOrder'));
     }else {
-      Toast.info('请选择商品');
+      Toast.info('请选择商品', 1);
     }
   },
   addCounts(info) {

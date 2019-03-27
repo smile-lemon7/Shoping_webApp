@@ -9,7 +9,6 @@ import PricePanel from '../../components/PricePanel';
 import ProdCount from '../../components/ProdCount';
 import Loading from '../../components/Loading';
 import styles from './index.less';
-import addressServices from '../../services/address';
 import { saveLocalStorage, getLocalStorage } from '../../utils/utils';
 import { Flex, Tabs, Button, WingBlank, Modal, List, Icon, NavBar } from 'antd-mobile';
 
@@ -20,15 +19,24 @@ class ProductDetailsPage extends Component {
     currentAddress: {},
     count: 1,
     page: 0,
+    addressList: [],
   }
-  async componentDidMount() {
+  componentDidMount() {
     const { query, user_id } = this.props;
     query({id: getQueryString('id')});
+    this.setState({id: getQueryString('id')})
     if(getLocalStorage('deliveryAddress')) {
       this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
     }
-    // const { data } = addressServices.query({user_id});
-    // console.log(data)
+    if(getLocalStorage('address')) {
+      this.setState({addressList: JSON.parse(getLocalStorage('address'))})
+    }
+  }
+  componentWillReceiveProps() {
+    if(this.state.id !== getQueryString('id')) {
+      this.props.query({id: getQueryString('id')});
+      this.setState({id: getQueryString('id')});
+    }
   }
   onAdd = () => {
     this.setState({count: ++this.state.count})
@@ -57,8 +65,13 @@ class ProductDetailsPage extends Component {
     this.setState({addressModal: false})
   }
   onSelectAddress = (e) => {
-    e.preventDefault();
-    this.setState({addressModal: true})
+    if( this.state.addressList.length>0 ) {
+      e.preventDefault();
+      this.setState({addressModal: true})
+    }else {
+      e.preventDefault();
+      this.props.onAddAddress();
+    }
   }
   onAddressBack = () => {
     this.setState({addressModal: false})
@@ -74,12 +87,11 @@ class ProductDetailsPage extends Component {
 
   render() {
     
-    const {onBack, onBuy} = this.props;
+    const {onBack, onBuy, onDetails} = this.props;
     let {product, user_id, list, loading, tabs } = this.props;
     const { id, cover_img, price, stock } = product;
     list = list.map(item => ({...item, onSelect: ()=>this.onSelect(item)}));
-    console.log(list)
-    const {count, currentAddress} = this.state;
+    const {count, currentAddress, addressList} = this.state;
     return (
       <Flex className={styles.wrap} align="start" justify="around">
         <Flex className={styles.backBtn}><img src="/back.png" onClick={onBack}/></Flex>
@@ -89,9 +101,9 @@ class ProductDetailsPage extends Component {
               initialPage={this.state.page}
               onChange={this.onChange}
             >
-              <Flex justify="center" className={styles.contentWrap}><ProductPanel productInfo={product} currentAddress={currentAddress}/></Flex>
-              <Flex justify="center" className={styles.contentWrap}><DetailsPanel /></Flex>
-              <Flex justify="center" className={styles.contentWrap}><RecommendPanel /></Flex>
+              <Flex justify="center" align="start" className={styles.contentWrap} ><ProductPanel onDetails={onDetails} productInfo={product} currentAddress={currentAddress}/></Flex>
+              <Flex justify="center" align="start" className={styles.contentWrap}><DetailsPanel content={product.content} /></Flex>
+              <Flex justify="center" align="start" className={styles.contentWrap}><RecommendPanel list={product.sameProducts} onDetails={onDetails}/></Flex>
             </Tabs>: <Loading />
           }
         <Flex className={styles.bottomWrap} justify="between">
@@ -125,7 +137,7 @@ class ProductDetailsPage extends Component {
                     </WingBlank>
                     <Flex justify="between" style={{width:'100%',borderBottom: '1px solid #f1f1f1',boxSizing:'border-box',padding:'4px 15px 10px 15px'}}>
                       <Flex justify="between" style={{width:'100%'}}>
-                        <span style={{fontSize: 13, color:'#666'}}>{currentAddress.area}</span>
+                        <span style={{fontSize: 13, color:'#666'}}>{JSON.stringify(currentAddress)!=='{}'?currentAddress.details:'请添加地址'}</span>
                       </Flex>
                       <Icon type="right" size="sm" color="#888" />
                     </Flex>
@@ -176,6 +188,7 @@ class ProductDetailsPage extends Component {
                 </WingBlank>
               </div>
             </Modal>
+            
         </Flex>
       </Flex>
     );
@@ -245,6 +258,12 @@ function mapDispatch2Props(dispatch) {
     },
     query(id) {
       dispatch({type: 'products/query_product', payload: id})
+    },
+    onDetails(id) {
+      dispatch(routerRedux.push(`/details?id=${id}`))
+    },
+    onAddAddress() {
+      dispatch(routerRedux.push(`/address`))
     }
   }
 }

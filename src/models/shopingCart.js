@@ -18,7 +18,7 @@ export default {
     // },
     *addCart({ payload }, {call, put}) {
       yield call(cartServices.addCart, payload);
-      Toast.info('添加购物车成功!')
+      Toast.info('添加购物车成功!', 1)
     },
     *reduceCounts({ payload }, {call, put}) {
       yield call(cartServices.reduceCounts, payload)

@@ -12,8 +12,12 @@ function query_recommend() {
 
 function query_product({id}) {
   return request(`/api/production/info/${id}/`, {headers: {"Content-Type": 'application/json'}}).then(({ data: product })=>{
+    product = product[0];
     product.cover_img = JSON.parse(product.cover_img).map(item => (formatImageUrl(item)))
     product.content = JSON.parse(product.content).map(item => (formatImageUrl(item)))
+    product.sameProducts.forEach(item => {
+      item.cover_img = JSON.parse(item.cover_img).map(itm => (formatImageUrl(itm)))
+    })
     return {data: product}
   })
 }

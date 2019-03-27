@@ -21,7 +21,7 @@ const ProdCarousel = ({ list }) => {
   return (
     <Flex className={styles.CarouselWrap}>
       <Carousel 
-        autoplay = {false} 
+        autoplay = {true} 
         infinite 
         dotStyle={dotStyle} 
         dotActiveStyle={dotActiveStyle} 

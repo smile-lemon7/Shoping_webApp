@@ -10,8 +10,6 @@ function MinePage({orderIcon, onOrderType, onMyAddress, ...props}) {
   const { tel } = props;
   orderIcon = orderIcon.map(item => ({...item, onClick:()=>onOrderType(item.id)}));
   const addressInfo = JSON.parse(getLocalStorage('deliveryAddress'));
-  const {receiver, phone, area, details} = addressInfo;
-
   return (
    <Flex className={styles.wrap} direction="column" align="center">
       <Flex className={styles.myInfo} >
@@ -37,15 +35,18 @@ function MinePage({orderIcon, onOrderType, onMyAddress, ...props}) {
         <Flex className={styles.addressPanel} justify="around" direction="column">
           <PanelTitle title="我的收货地址" subTitle="查看全部地址" onClick={onMyAddress}/>
           <Flex className={styles.myAddressPanel} justify="around">
-            <Flex className={styles.C} direction="column" align="start" >
-              <Flex className={styles.CT}>
-                <span className={styles.CTL}>{receiver}</span>
-                <span>{phone}</span>
-              </Flex>
-              <Flex className={styles.CB} align="start">
-                <span>{area}{details}</span>
-              </Flex>
-            </Flex>
+            {addressInfo?
+              <Flex className={styles.C} direction="column" align="start" >
+                <Flex className={styles.CT}>
+                  <span className={styles.CTL}>{addressInfo.receiver}</span>
+                  <span>{addressInfo.phone}</span>
+                </Flex>
+                <Flex className={styles.CB} align="start">
+                  <span>{addressInfo.details}</span>
+                </Flex>
+              </Flex>:<Flex className={styles.C} justify="center" style={{color:'#666',fontWeight:300}}>请添加地址</Flex>
+            }
+            
           </Flex>
         </Flex>
       </WingBlank>

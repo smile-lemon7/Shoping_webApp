@@ -1,126 +1,139 @@
 import React,{ Component } from 'react';
 import { connect } from 'dva';
-import { Flex, Icon, WingBlank, WhiteSpace, Button, Toast } from 'antd-mobile';
+import { Flex, Icon, WingBlank, WhiteSpace, Button } from 'antd-mobile';
 import Item from '../../components/ProductCom/Item';
 import PricePanel from '../../components/PricePanel';
 import InfoItem from '../../components/InfoItem';
+import { getQueryString } from '../../utils/utils';
 import styles from './index.less';
-import { routerRedux } from 'dva/router';
+import Loading from '../../components/Loading';
 
 
-function OrderDetails({onBack, onSelectAddress, ...props}) {
-  let { info } = props;
-  let arr = [
-    {type:1, value:<Flex className={styles.topText}>
-      {info.status===1?<Flex className={styles.orderStatusPanel} justify="between">
-          <span className={styles.statusText}>等待买家付款</span>
-          <i className='iconfont icon-daifukuan1' style={{fontSize: 42}}></i>
-        </Flex>:null
+class OrderDetails extends Component {
+  componentDidMount() {
+    const { onDetails } = this.props;
+    onDetails({id: getQueryString('id')})
+  }
+
+  render() {
+    const {onBack, onSelectAddress, onConfirmReceive} = this.props;
+    let { info } = this.props;
+    let arr = [
+      {type:0, value:<Flex className={styles.topText}>
+        <Flex className={styles.orderStatusPanel} justify="between">
+            <span className={styles.statusText}>等待买家付款</span>
+            <i className='iconfont icon-daifukuan1' style={{fontSize: 42}}></i>
+          </Flex>
+        </Flex>
+      },{
+        type: 1, value: <Flex className={styles.topText}>
+        <Flex className={styles.orderStatusPanel} justify="between">
+            <span className={styles.statusText}>买家已付款</span>
+            <i className='iconfont icon-daifahuo1' style={{fontSize: 42}}></i>
+          </Flex>
+        </Flex>
+      },{
+        type: 2, value: <Flex className={styles.topText}>
+        <Flex className={styles.orderStatusPanel} justify="between">
+            <span className={styles.statusText}>卖家已发货</span>
+            <i className='iconfont icon-daishouhuo2' style={{fontSize: 42}}></i>
+          </Flex>
+        </Flex>
+      },{
+        type: 3, value: <Flex className={styles.topText}>
+        <Flex className={styles.orderStatusPanel} justify="between">
+            <span className={styles.statusText}>交易成功</span>
+            <i className='iconfont icon-qunfengjiaoyichenggong' style={{fontSize: 42}}></i>
+          </Flex>
+        </Flex>
       }
-      </Flex>
-    },{
-      type: 2, value: <Flex className={styles.topText}>
-      {info.status===2?<Flex className={styles.orderStatusPanel} justify="between">
-          <span className={styles.statusText}>买家已付款</span>
-          <i className='iconfont icon-daifahuo1' style={{fontSize: 42}}></i>
-        </Flex>:null
-      }
-      </Flex>
-    },{
-      type: 3, value: <Flex className={styles.topText}>
-      {info.status===3?<Flex className={styles.orderStatusPanel} justify="between">
-          <span className={styles.statusText}>卖家已发货</span>
-          <i className='iconfont icon-daishouhuo2' style={{fontSize: 42}}></i>
-        </Flex>:null
-      }
-      </Flex>
-    },{
-      type: 4, value: <Flex className={styles.topText}>
-      {info.status===4?<Flex className={styles.orderStatusPanel} justify="between">
-          <span className={styles.statusText}>交易成功</span>
-          <i className='iconfont icon-qunfengjiaoyichenggong' style={{fontSize: 42}}></i>
-        </Flex>:null
-      }
-      </Flex>
+    ]
+    let statusText = '';
+    if(info.status) {
+      statusText = arr.filter(item => {return item.type === info.status})[0];
     }
-  ]
-  let statusText = arr.filter(item => {return item.type === info.status});
-
-  return (
-    <Flex className={styles.wrap} direction="column"> 
-      <Flex className={styles.topBar}>
-        <Icon type="left" style={{color:'#fff'}} size="md" onClick={onBack}/>
-        <span>订单详情</span>
-      </Flex>
-    {/* <Flex> */}
-      <Flex className={styles.container} direction="column" align="start">
-        {statusText[0].value}
-        <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
-          <Flex className={styles.L} justify="center"><i className="iconfont icon-ditu-dibiao" style={{color: '#fff'}}></i></Flex>
-          <Flex className={styles.C} direction="column" align="start">
-            <Flex className={styles.CT}>
-              <span className={styles.CTL}>{info.address.receiver}</span>
-              <span>{info.address.phone}</span>
+    
+    return (
+      <Flex className={styles.wrap} direction="column"> 
+        <Flex className={styles.topBar}>
+          <Icon type="left" style={{color:'#fff'}} size="md" onClick={onBack}/>
+          <span>订单详情</span>
+        </Flex>
+      <Flex style={{width: '100%',marginTop:45}} justify="center">
+        {!this.props.loading?
+          <Flex className={styles.container} direction="column" align="start">
+            {statusText.value}
+            {info.address?
+              <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
+                <Flex className={styles.L} justify="center"><i className="iconfont icon-ditu-dibiao" style={{color: '#fff'}}></i></Flex>
+                <Flex className={styles.C} direction="column" align="start">
+                  <Flex className={styles.CT}>
+                    <span className={styles.CTL}>{info.address.receiver}</span>
+                    <span>{info.address.phone}</span>
+                  </Flex>
+                  <Flex className={styles.CB} align="start">
+                    <p>{info.address.details}</p>
+                  </Flex>
+                </Flex>
+              </Flex>:null
+            }
+            <WhiteSpace size="lg" />
+            <Flex className={styles.prodWrap} direction="column">
+              <Flex direction="column" style={{width:'100%'}} justify="center">
+                {info.orderProdArr&&info.orderProdArr.map(item=> (
+                  <Item info={item} key={item.id} />
+                ))}
+              </Flex>
+              <Flex className={styles.totalPricePanel} justify="between">
+                <span>订单总价</span>
+                <PricePanel price={info.sumprice} color={'#000'} size={'13px'} />
+              </Flex>
+              <Flex className={styles.linePanel} justify="between">
+                <span>实付款</span>
+                <PricePanel price={info.sumprice} size={'13px'} />
+              </Flex>
             </Flex>
-            <Flex className={styles.CB} align="start">
-              <p>{info.address.details}</p>
+            <WhiteSpace size="lg" />
+            <Flex className={styles.orderDetail} direction="column" align="start">
+              <Flex className={styles.title}>订单信息</Flex>
+              <InfoItem title={"订单编号:"} value={info.number} />
+              <InfoItem title={"创建时间:"} value={info.create_at} />
+              {/* <InfoItem title={"付款时间:"} value={info.pay_date} />
+              <InfoItem title={"发货时间:"} value={info.send_date} /> 
+              <InfoItem title={"成交时间:"} value={info.success_date} /> */}
             </Flex>
-          </Flex>
-        </Flex>
-        <WhiteSpace size="lg" />
-        <Flex className={styles.prodWrap} direction="column">
-          <Flex direction="column" style={{width:'100%'}} justify="center">
-            {info.orderProdArr&&info.orderProdArr.map(item=> (
-              <Item info={item} key={item.id} />
-            ))}
-          </Flex>
-          <Flex className={styles.totalPricePanel} justify="between">
-            <span>订单总价</span>
-            <PricePanel price={info.sumPrice} color={'#000'} size={'13px'} />
-          </Flex>
-          <Flex className={styles.linePanel} justify="between">
-            <span>实付款</span>
-            <PricePanel price={info.sumPrice} size={'13px'} />
-          </Flex>
-        </Flex>
-        <WhiteSpace size="lg" />
-        <Flex className={styles.orderDetail} direction="column" align="start">
-          <Flex className={styles.title}>订单信息</Flex>
-          <InfoItem title={"订单编号:"} value={info.number} />
-          <InfoItem title={"创建时间:"} value={info.create_at} />
-          <InfoItem title={"付款时间:"} value={info.pay_date} />
-          <InfoItem title={"发货时间:"} value={info.send_date} /> 
-          <InfoItem title={"成交时间:"} value={info.success_date} />
-        </Flex>
+          </Flex>: <Loading />
+        }
       </Flex>
-    {/* </Flex> */}
-      <Flex justify="end" className={styles.confirmBottom} justify="end">
-          {/** 1：未付款*/}
-          {info.status===1?  
-            <Flex className={styles.btnWrap} justify="end">
-              <Button size="small" className={styles.cancelBtn}>取消订单</Button> 
-              <Button size="small" className={styles.payBtn}>付款</Button>
-            </Flex>:null
-          }
-          {/** 2：付款未发货*/}
-          {info.status===2?<Flex className={styles.btnWrap} justify="end">
-              <Button size="small" className={styles.removeBtn}>退款</Button>
-            </Flex>:null
-          }
-          {/** 3：已发货*/}
-          {info.status===3?<Flex className={styles.btnWrap} justify="end">
-              <Button size="small" className={styles.confirmBtn}>确认收货</Button>
-            </Flex>:null
-          }
-          {/** 4：交易成功*/}
-          {info.status===4?<Flex className={styles.btnWrap} justify="end">
-              <Button size="small" className={styles.removeBtn}>删除订单</Button>
-            </Flex>:null
-          }
-        </Flex>
-    </Flex>
-  )
+        <Flex justify="end" className={styles.confirmBottom} justify="end">
+            {/** 1：未付款*/}
+            {info.status===0?  
+              <Flex className={styles.btnWrap} justify="end">
+                <Button size="small" className={styles.cancelBtn}>取消订单</Button> 
+                <Button size="small" className={styles.payBtn}>付款</Button>
+              </Flex>:null
+            }
+            {/** 2：付款未发货*/}
+            {/* {info.status===1?<Flex className={styles.btnWrap} justify="end">
+                <Button size="small" className={styles.removeBtn}>退款</Button>
+              </Flex>:null
+            } */}
+            {/** 3：已发货*/}
+            {info.status===2?<Flex className={styles.btnWrap} justify="end">
+                <Button size="small" className={styles.confirmBtn} onClick={()=>onConfirmReceive({id: info.order_id})}>确认收货</Button>
+              </Flex>:null
+            }
+            {/** 4：交易成功*/}
+            {info.status===3?<Flex className={styles.btnWrap} justify="end">
+                <Button size="small" className={styles.removeBtn}>删除订单</Button>
+              </Flex>:null
+            }
+          </Flex>
+      </Flex>
+    )
+  }
 }
+
 
 OrderDetails.defaultProps = {
   info: {
@@ -164,11 +177,24 @@ OrderDetails.defaultProps = {
   }
 }
 
+function mapState2Props({order, loading: { effects }}){
+  return {
+    info: order.info,
+    loading: effects['order/queryOne']
+  }
+}
+
 function mapDispatch2Props(dispatch) {
   return {
     onBack() {
       window.history.back();
     },
+    onDetails(id) {
+      dispatch({type: 'order/queryOne', payload: id})
+    },
+    onConfirmReceive(id) {
+      dispatch({type: 'order/confirmReceive', payload: id})
+    }
   }
 }
-export default connect(()=>({}), mapDispatch2Props)(OrderDetails);
+export default connect(mapState2Props, mapDispatch2Props)(OrderDetails);

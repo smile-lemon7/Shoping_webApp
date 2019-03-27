@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import { connect } from 'dva';
-import { Flex, Icon, WingBlank, WhiteSpace, Button, Toast } from 'antd-mobile';
+import { Flex, Icon, WingBlank, WhiteSpace, Button } from 'antd-mobile';
 import Item from '../../components/ProductCom/Item';
 import PricePanel from '../../components/PricePanel';
 import styles from './index.less';
@@ -21,7 +21,6 @@ class confirmOrder extends Component {
     const {onBack, onConfirmOrder, onSelectAddress} = this.props;
     let { unConfirmOrder } = this.state;
     let {orderProdArr, sumPrice} = unConfirmOrder;
-    console.log(orderProdArr )
     let list = orderProdArr;
     const { currentAddress } = this.state;
     return (
@@ -81,11 +80,12 @@ const mapDispatch2Props = (dispatch) => ({
   },
   onConfirmOrder(params) {
     let {currentAddress, unConfirmOrder} = params;
-    unConfirmOrder.address_id = currentAddress.id;
+    // unConfirmOrder.address_id = currentAddress.id;
+    unConfirmOrder.address_id = 22;
     let orderProdArr = unConfirmOrder.orderProdArr;
     unConfirmOrder.sumprice = unConfirmOrder.sumPrice;
     delete unConfirmOrder.sumPrice;
-    unConfirmOrder.products = orderProdArr.map(item => ({id:item.id, count: item.counts}));
+    unConfirmOrder.products = JSON.stringify(orderProdArr.map(item => ({id:item.id, count: item.counts})))
     delete unConfirmOrder.orderProdArr;
 
     // console.log(unConfirmOrder)

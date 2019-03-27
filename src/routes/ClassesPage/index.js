@@ -4,6 +4,7 @@ import { routerRedux } from 'dva/router';
 import { Flex, Tabs } from 'antd-mobile';
 import Group from '../../components/ProdClassGroup/Group';
 import classesServices from '../../services/classes';
+import Loading from '../../components/Loading';
 import SearchBar from '../../components/SearchBar';
 import styles from './index.less';
 
@@ -11,12 +12,16 @@ class ClassesPage extends Component {
   state = {
     page: 0,
     list_all: [],
-    classes: []
+    classes: [],
+    loading_classes: true,
+    loading_classesItem: true,
   }
   async componentWillMount() {
     let { onDetails } = this.props;
     let { data: classes } = await classesServices.query();
     let { data: classItem } = await classesServices.query_classes_item({cls_id: classes[0].id});
+    classes?this.setState({loading_classes: false}):null
+    classItem?this.setState({loading_classesItem: false}):null
     let cls = classes;
     cls.forEach(item => {
       if(item.id === classItem.id) {
@@ -45,31 +50,32 @@ class ClassesPage extends Component {
     })
   }
   render() {
-    let { list_all, classes } = this.state;
+    let { list_all, classes, loading_classes, loading_classesItem} = this.state;
     classes = classes.map(item => ({...item, title: item.name}))
     return (
       <div className={styles.wrap}>
         {/* <Flex justify='between' className={styles.searchBox} justify="center">
           <SearchBar />
         </Flex> */}
-        <Tabs tabs={classes} 
-          animated={true}
-          tabBarPosition="left"
-          tabDirection="vertical"
-          swipeable={true}
-          initialPage={this.state.page}
-          onChange={this.onChange}
-          renderTabBar={props => <Tabs.DefaultTabBar {...props} page={8} />}
-          tabBarUnderlineStyle={{top:this.state.page*60}}
-        >
-          {list_all.map(item => (
-            <Flex key={item.id} justify="center" align="start" className={styles.contentWrap}>
-              <Group list={item.prods} classes={item.name} />
-            </Flex>
-          ))
+        {loading_classes||loading_classesItem?<Flex style={{paddingTop:'45px',height:'100%'}} justify="center"><Loading /></Flex>:
+          <Tabs tabs={classes} 
+            animated={true}
+            tabBarPosition="left"
+            tabDirection="vertical"
+            swipeable={true}
+            initialPage={this.state.page}
+            onChange={this.onChange}
+            renderTabBar={props => <Tabs.DefaultTabBar {...props} page={8} />}
+            tabBarUnderlineStyle={{top:this.state.page*60}}
+          >
+            {list_all.map(item => (
+              <Flex key={item.id} justify="center" align="start" className={styles.contentWrap}>
+                <Group list={item.prods} classes={item.name} />
+              </Flex>
+            ))
           }
         </Tabs>
-
+        }
       </div>
     )
   }

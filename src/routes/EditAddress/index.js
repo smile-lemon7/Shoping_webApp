@@ -85,7 +85,7 @@ const mapDispatch2Props = (dispatch) => ({
       _type === 'edit' ?dispatch({type: 'address/edit', payload:params}):
       dispatch({type: 'address/add', payload:params})
     }else {
-      Toast.info('该联系方式不存在')
+      Toast.info('该联系方式不存在', 1)
     }
   },
   onRemove(params) {

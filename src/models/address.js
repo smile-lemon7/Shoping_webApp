@@ -15,12 +15,12 @@ export default {
     *add({ payload }, {call, put}) {
       yield call(addressServices.add, payload);
       yield put(routerRedux.push('/address'));
-      Toast.info('地址添加成功');
+      Toast.info('地址添加成功', 1);
     },
     *edit({ payload }, {call, put}) {
       yield call(addressServices.edit, payload);
       yield put(routerRedux.push('/address'));
-      Toast.info('地址修改成功');
+      Toast.info('地址修改成功', 1);
     },
     *query({ payload }, {call, put}) {
       const { data } = yield call(addressServices.query_all, payload);
@@ -28,7 +28,7 @@ export default {
     },
     *del({ payload }, {call, put}) {
       yield call(addressServices.del, payload);
-      Toast.info('删除成功');
+      Toast.info('删除成功', 1);
       yield put(routerRedux.push('/address'));
     }
   },

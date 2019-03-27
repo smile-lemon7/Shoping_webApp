@@ -1,4 +1,5 @@
 import productsServices from '../services/products';
+import { routerRedux } from 'dva/router';
 
 export default {
 

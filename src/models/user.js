@@ -55,7 +55,7 @@ export default {
         //   Toast.info('验证码发送失败，请重试！');
         // })
       }else {
-        Toast.info('手机号不存在');
+        Toast.info('手机号不存在', 1);
       }
     },
     *login({ payload }, {call, put}) {
@@ -69,7 +69,7 @@ export default {
         yield put({type: 'saveUserInfo', payload: data })
         // yield put({type: 'saveUserInfo', payload: {id: 1, phone:'13872633111'} })
       }else {
-        Toast.info('验证码输入错误')
+        Toast.info('验证码输入错误', 1)
       }
     }
   },
