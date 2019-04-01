@@ -9,7 +9,7 @@ import styles from './index.less';
 function MinePage({orderIcon, onOrderType, onMyAddress, ...props}) {
   const { tel } = props;
   orderIcon = orderIcon.map(item => ({...item, onClick:()=>onOrderType(item.id)}));
-  const addressInfo = JSON.parse(getLocalStorage('deliveryAddress'));
+  const addressInfo = getLocalStorage('deliveryAddress');
   return (
    <Flex className={styles.wrap} direction="column" align="center">
       <Flex className={styles.myInfo} >
@@ -38,11 +38,11 @@ function MinePage({orderIcon, onOrderType, onMyAddress, ...props}) {
             {addressInfo?
               <Flex className={styles.C} direction="column" align="start" >
                 <Flex className={styles.CT}>
-                  <span className={styles.CTL}>{addressInfo.receiver}</span>
-                  <span>{addressInfo.phone}</span>
+                  <span className={styles.CTL}>{JSON.parse(addressInfo).receiver}</span>
+                  <span>{JSON.parse(addressInfo).phone}</span>
                 </Flex>
                 <Flex className={styles.CB} align="start">
-                  <span>{addressInfo.details}</span>
+                  <span>{JSON.parse(addressInfo).details}</span>
                 </Flex>
               </Flex>:<Flex className={styles.C} justify="center" style={{color:'#666',fontWeight:300}}>请添加地址</Flex>
             }

@@ -24,12 +24,12 @@ class ClassesPage extends Component {
     classItem?this.setState({loading_classesItem: false}):null
     let cls = classes;
     cls.forEach(item => {
-      if(item.id === classItem.id) {
+      if(item.id === classItem.id*1) {
         classItem.prods = classItem.prods.map(item => ({...item, onClick: () => onDetails(item.id)}))
         item.prods = classItem.prods;
       }
     })
-    this.setState({classes_id: 1, list_all: cls, classes});
+    this.setState({list_all: cls, classes});
   }
   onChange = async ({id}) => {
     let { classes } = this.state;

@@ -24,10 +24,12 @@ class ProductDetailsPage extends Component {
   componentDidMount() {
     const { query, user_id } = this.props;
     query({id: getQueryString('id')});
-    this.setState({id: getQueryString('id')})
+    this.setState({id: getQueryString('id')});
+
     if(getLocalStorage('deliveryAddress')) {
       this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
     }
+    console.log( {addressList: JSON.parse(getLocalStorage('address'))} )
     if(getLocalStorage('address')) {
       this.setState({addressList: JSON.parse(getLocalStorage('address'))})
     }
@@ -149,8 +151,7 @@ class ProductDetailsPage extends Component {
                 </List>
                 <Button 
                   type="primary" 
-                  // onClick={()=>this.cartHandle({user_id, prod_id:id, count, address_id: currentAddress.id})} 
-                  onClick={()=>this.cartHandle({user_id, prod_id:id, count, address_id: 22})} 
+                  onClick={()=>this.cartHandle({user_id, prod_id:id, count, address_id: currentAddress.id})} 
                   style={{height: '40px',lineHeight: '40px',fontSize: 13,color:'#fff',marginBottom:20,borderRadius: 20}}>确定</Button>
               </WingBlank>
             </Modal>
@@ -169,7 +170,8 @@ class ProductDetailsPage extends Component {
                 >配送至</NavBar>
                 <WingBlank style={{width:'92%',height:'100%',margin:'45px auto 0 auto'}} size="md">
                   <Flex style={{width:'100%'}} direction="column">
-                    {list.map(item => (
+                    {/* {list.map(item => ( */}
+                    {addressList.map(item => (
                       <Flex key={item.id} style={{width:'100%',padding:'12px 0',border:'1px solid #f1f1f1'}} direction="column" align="start" justify="start" onClick={item.onSelect}>
                         <Flex justify="between" style={{width: '94%',margin: '0 3%',color:'#000',fontSize:13}}>
                           <span>{item.receiver}</span>
@@ -233,7 +235,7 @@ ProductDetailsPage.defaultProps = {
   ]
 };
 
-function mapState2Props({user, products, cart, loading: { effects }}) {
+function mapState2Props({user, products, address, cart, loading: { effects }}) {
   return {
     user_id: user.id,
     product: products.product,
@@ -264,7 +266,7 @@ function mapDispatch2Props(dispatch) {
     },
     onAddAddress() {
       dispatch(routerRedux.push(`/address`))
-    }
+    },
   }
 }
 export default connect(mapState2Props, mapDispatch2Props)(ProductDetailsPage);

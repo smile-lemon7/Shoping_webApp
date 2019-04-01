@@ -14,7 +14,9 @@ class confirmOrder extends Component {
     unConfirmOrder: {},
   }
   componentDidMount() {
-    this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
+    if(getLocalStorage('deliveryAddress')) {
+      this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
+    }
     this.setState({unConfirmOrder: JSON.parse(getLocalStorage('unConfirmOrder'))})
   }
   render() {
@@ -33,7 +35,7 @@ class confirmOrder extends Component {
           <WingBlank style={{width: '92%'}}>
             <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
               <Flex className={styles.L} justify="center"><i className="iconfont icon-ditu-dibiao" style={{color: '#fff'}}></i></Flex>
-              {currentAddress.receiver?<Flex className={styles.C} direction="column" align="start">
+              {currentAddress?<Flex className={styles.C} direction="column" align="start">
                 <Flex className={styles.CT}>
                   <span className={styles.CTL}>{currentAddress.receiver}</span>
                   <span>{currentAddress.phone}</span>
@@ -80,8 +82,8 @@ const mapDispatch2Props = (dispatch) => ({
   },
   onConfirmOrder(params) {
     let {currentAddress, unConfirmOrder} = params;
-    // unConfirmOrder.address_id = currentAddress.id;
-    unConfirmOrder.address_id = 22;
+    unConfirmOrder.address_id = currentAddress.id;
+    // unConfirmOrder.address_id = 22;
     let orderProdArr = unConfirmOrder.orderProdArr;
     unConfirmOrder.sumprice = unConfirmOrder.sumPrice;
     delete unConfirmOrder.sumPrice;

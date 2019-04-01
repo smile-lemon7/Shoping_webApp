@@ -3,6 +3,7 @@ import { Toast } from 'antd-mobile';
 import { isPhoneNum } from '../utils/utils';
 import loginServices from '../services/user';
 import { routerRedux } from 'dva/router';
+import { getLocalStorage } from '../utils/utils';
 import { saveLocalLogin } from '../utils/user';
 
 export default {
@@ -84,7 +85,17 @@ export default {
   },
 
   subscriptions: {
-    setup({ dispatch }) {
+    setup({ dispatch, history }) {
+      history.listen(({pathname}) => {
+        if(pathname === '/') {
+          dispatch({type: 'query_recommend'});
+          if( getLocalStorage('LOGIN') ) {
+            dispatch(routerRedux.push('/tabs/index'))
+          }else {
+            dispatch(routerRedux.push('/'))
+          }
+        }
+      })
     }
   }
 

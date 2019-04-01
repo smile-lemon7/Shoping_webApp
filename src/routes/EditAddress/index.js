@@ -17,9 +17,14 @@ class EditAddress extends Component {
     isDefault: false,
     type: '',
   }
-  componentWillMount() {
+  componentDidMount() {
     if(getQueryString('type') === 'edit') {
       this.setState({type: 'edit'});
+      if(getLocalStorage('editAddress')) {
+        this.setState({...JSON.parse(getLocalStorage('editAddress'))})
+      }
+    }else {
+      this.setState({type: 'add'});
       if(getLocalStorage('editAddress')) {
         this.setState({...JSON.parse(getLocalStorage('editAddress'))})
       }
@@ -34,7 +39,6 @@ class EditAddress extends Component {
   render() {
     const {onSave, onBack, onRemove, user_id} = this.props;
     const {receiver, phone, details, isDefault, type, id} = this.state;
-
     return (
       <div className={styles.wrap} direction="column">
         <NavBar
@@ -82,6 +86,7 @@ const mapDispatch2Props = (dispatch) => ({
     const {phone, isDefault, _type} = params;
     if( isPhoneNum(phone.split(' ').join('')) ) {
       isDefault?params.isDefault = 1: params.isDefault = 0;
+      params.phone = phone.split(' ').join('');
       _type === 'edit' ?dispatch({type: 'address/edit', payload:params}):
       dispatch({type: 'address/add', payload:params})
     }else {

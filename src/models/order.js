@@ -30,7 +30,7 @@ export default {
       const { user_id, id } = payload;
       yield call(orderServices.calcel, {id});
       Toast.info('取消成功', 1);
-      yield put({type: 'query', payload: user_id});
+      yield put({type: 'query', payload: {user_id}});
     },
     *pay({ payload }, {call, put}) {
       const { data } = yield call(orderServices.pay, payload);

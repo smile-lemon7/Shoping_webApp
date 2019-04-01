@@ -98,7 +98,7 @@ HomePage.defaultProps = {
   ]
 };
 
-const mapState2Poprs = ({ user, products, loading: { effects } }) => ({
+const mapState2Poprs = ({ user, products, address, loading: { effects } }) => ({
   user_id: user.id,
   recommend_list: products.recommend_list,
   loading: effects['products/query_recommend'],
@@ -110,7 +110,10 @@ const mapDispatch2Props = (dispatch) => ({
   },
   onCarousel(id) {
     dispatch(routerRedux.push(`/carouselDetails?id=${id}`))
-  }
+  },
+  getAddress(user_id) {
+    dispatch({type: 'address/query', payload: user_id})
+  },
 })
 
 export default connect(mapState2Poprs, mapDispatch2Props)(HomePage);

@@ -1,7 +1,8 @@
 import request from '../utils/request';
 
 function add(params) {
-  delete params.type;
+  console.log(params)
+  delete params._type;
   delete params.id;
   return request(`/api/add/address/`, { 
     method: 'POST',
@@ -10,6 +11,7 @@ function add(params) {
 }
 
 function edit(params) {
+  console.log(params)
   const { user_id, id} = params;
   delete params._type;
   delete params.user_id;

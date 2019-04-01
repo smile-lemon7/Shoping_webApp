@@ -1,5 +1,6 @@
 import { connect } from 'dva';
 import { Route } from 'dva/router';
+import { getLocalStorage } from '../../utils/utils';
 
 // deafault alternative com.
 import LoginPage from '../LoginPage';
@@ -7,7 +8,6 @@ import { log } from '../../utils/log';
 import routes from "../../routeConfig";
 
 const defaultRouteCfg = {
-
   canRender: ({ logined }) => {
     return logined
   },
@@ -32,7 +32,7 @@ export const RouteWithSubRoutes = ({ route, identProps, key }) => {
       // }
       // log(`Route[${route.path}]:`, cfg);
       // return cfg.canPass ? <route.component {...props} routes={route.routes} identProps={identProps} /> : <cfg.alternative {...props} />
-      return <route.component {...props} routes={route.routes} identProps={identProps} /> 
+      return <route.component {...props} routes={route.routes} identProps={identProps} />
     }}
   />
 }

@@ -27,35 +27,27 @@ import CarouselDetail from './routes/CarouselDetail';
 export default [
   {
     path: '/carouselDetails',
-    canRender: () =>  (getLocalLogin()),
     component: CarouselDetail,
   },{
     path: '/orderDetails',
-    canRender: () =>  (getLocalLogin()),
     component: OrderDetails,
   },{
     path: '/orders',
-    canRender: () =>  (getLocalLogin()),
     component: MyOrders,
   },{
     path: '/editAddress',
-    canRender: () =>  (getLocalLogin()),
     component: EditAddress,
   },{
     path: '/address',
-    canRender: () =>  (getLocalLogin()),
     component: AddressPage,
   },{
     path: '/confirmOrder',
-    canRender: () =>  (getLocalLogin()),
     component: ConfirmOrder,
   },{
     path: '/details',
-    canRender: () =>  (getLocalLogin()),
     component: ProductDetailsPage,
   },{
     path: '/tabs',
-    canRender: () =>  (getLocalLogin()),
     component: Layout,
     routes: [
       {
@@ -78,7 +70,6 @@ export default [
   },{
     path: '/',
     component: LoginPage,
-    canRender: () => true,  // 首页不需要检查准入条件
   },
 ];
 
