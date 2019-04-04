@@ -18,6 +18,7 @@ function query_product({id}) {
     product.sameProducts.forEach(item => {
       item.cover_img = JSON.parse(item.cover_img).map(itm => (formatImageUrl(itm)))
     })
+    console.log( product )
     return {data: product}
   })
 }

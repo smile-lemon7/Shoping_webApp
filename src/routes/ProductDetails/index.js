@@ -26,11 +26,11 @@ class ProductDetailsPage extends Component {
     query({id: getQueryString('id')});
     this.setState({id: getQueryString('id')});
 
-    if(getLocalStorage('deliveryAddress')) {
+    if(!!!getLocalStorage('deliveryAddress')) {
       this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
     }
-    console.log( {addressList: JSON.parse(getLocalStorage('address'))} )
-    if(getLocalStorage('address')) {
+    // console.log( {addressList: JSON.parse(getLocalStorage('address'))} )
+    if(JSON.stringify(getLocalStorage('address'))!=='[]') {
       this.setState({addressList: JSON.parse(getLocalStorage('address'))})
     }
   }

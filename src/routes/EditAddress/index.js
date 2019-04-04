@@ -17,18 +17,19 @@ class EditAddress extends Component {
     isDefault: false,
     type: '',
   }
-  componentDidMount() {
+  componentWillMount() {
     if(getQueryString('type') === 'edit') {
       this.setState({type: 'edit'});
       if(getLocalStorage('editAddress')) {
-        this.setState({...JSON.parse(getLocalStorage('editAddress'))})
-      }
-    }else {
-      this.setState({type: 'add'});
-      if(getLocalStorage('editAddress')) {
-        this.setState({...JSON.parse(getLocalStorage('editAddress'))})
+        this.setState({...JSON.parse(getLocalStorage('editAddress')), loading: false});
       }
     }
+    // else {
+    //   this.setState({type: 'add'});
+    //   if(getLocalStorage('editAddress')) {
+    //     this.setState({...JSON.parse(getLocalStorage('editAddress'))})
+    //   }
+    // }
     
   }
   onChange = ({value, type}) => {
@@ -54,6 +55,13 @@ class EditAddress extends Component {
               <ListCom title={'详细地址'} value={details} type={'details'} onChange={this.onChange}/>
             </Flex>
           </Flex>
+          {/* <Flex className={styles.container}>
+            <Flex direction="column" style={{width:'100%'}}>
+              <ListCom title={'收货人'} value={receiver} type={'receiver'} icon={'iconfont icon-lianxiren'} onChange={this.onChange}/>
+              <ListCom title={'手机号码'} value={phone} type={'phone'} onChange={this.onChange}/>
+              <ListCom title={'详细地址'} value={details} type={'details'} onChange={this.onChange}/>
+            </Flex>
+          </Flex> */}
           <Flex className={styles.btnWrap} justify="start" align="start" direction="column">
             <Flex style={{width:'100%'}} justify="between">
               <Flex>设为默认地址</Flex>

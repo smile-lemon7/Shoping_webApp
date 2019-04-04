@@ -25,11 +25,11 @@ class ShopingCartPage extends Component {
     // this.setState({list});
   }
   onChangeSum = (e) => {
-    let { list } = this.props;
+    let { list } = this.state;
     if( e.target.checked ) {
       let idArr = [];
       list.forEach(item => {
-        idArr.push(item.id)
+        idArr.push(item.cart_id)
       })
       this.setState({
         selected: idArr,
@@ -74,10 +74,10 @@ class ShopingCartPage extends Component {
     e.preventDefault();
     let list = this.state.list;
     list.forEach(itm => {
-      if(itm.id === item.id) {
+        if(itm.cart_id === item.cart_id) {
         if( itm.counts > 1 ) {
           itm.counts -= 1;
-          reduceCounts({user_id, pro_id:itm.id, number:1});
+          reduceCounts({user_id, id:itm.cart_id, number:1});
         }else {
           itm.counts = 1;
         }
@@ -90,9 +90,9 @@ class ShopingCartPage extends Component {
     e.preventDefault();
     let list = this.state.list;
     list.forEach(itm => {
-      if(itm.id === item.id) {
+      if(itm.cart_id === item.cart_id) {
         itm.counts += 1;
-        addCounts({user_id, pro_id:itm.id, number:1});
+        addCounts({user_id, id:itm.cart_id, number:1});
       }
     })
     this.setState({list})
@@ -113,7 +113,7 @@ class ShopingCartPage extends Component {
 
   onRemove = async ({orderProdArr, user_id}) => {
     for(let item of orderProdArr) {
-      await cartServices.del({user_id, id: item.id});
+      await cartServices.del({user_id, id: item.cart_id});
     }
     let { data:list } = await cartServices.query({user_id});
     this.setState({list});
@@ -126,7 +126,7 @@ class ShopingCartPage extends Component {
     let orderProdArr = [];
     selected.forEach(item => {
       list.forEach(itm => {
-        if(item === itm.id) {
+        if(item === itm.cart_id) {
           sumPrice += itm.price * itm.counts;
           orderProdArr.push(itm);
         }
@@ -147,11 +147,11 @@ class ShopingCartPage extends Component {
             {list.length>0?
               <Flex className={styles.panel} direction="column">
                 {list.map(item => (
-                  <Flex className={styles.card} key={item.id}>
+                  <Flex className={styles.card} key={item.cart_id}>
                     <AgreeItem 
-                      ref={`item_${item.id}`}
-                      checked={selected.includes(item.id)}
-                      onChange={() => this.onChangeItem(item.id)}
+                      ref={`item_${item.cart_id}`}
+                      checked={selected.includes(item.cart_id)}
+                      onChange={() => this.onChangeItem(item.cart_id)}
                       >
                       <Flex style={{width: '100%'}}>
                         <img src={item.cover_img[0]} alt={item.cover_img[0]} onClick={(e)=>{this.onProdDetails(e, item.id)}} />

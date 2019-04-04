@@ -14,6 +14,7 @@ class confirmOrder extends Component {
     unConfirmOrder: {},
   }
   componentDidMount() {
+    console.log(getLocalStorage('deliveryAddress')  )
     if(getLocalStorage('deliveryAddress')) {
       this.setState({currentAddress: JSON.parse(getLocalStorage('deliveryAddress'))})
     }
@@ -35,7 +36,7 @@ class confirmOrder extends Component {
           <WingBlank style={{width: '92%'}}>
             <Flex className={styles.addressPanelWrap} align="center" justify="between" onClick={onSelectAddress}>
               <Flex className={styles.L} justify="center"><i className="iconfont icon-ditu-dibiao" style={{color: '#fff'}}></i></Flex>
-              {currentAddress?<Flex className={styles.C} direction="column" align="start">
+              {JSON.stringify(currentAddress)!=='{}'?<Flex className={styles.C} direction="column" align="start">
                 <Flex className={styles.CT}>
                   <span className={styles.CTL}>{currentAddress.receiver}</span>
                   <span>{currentAddress.phone}</span>

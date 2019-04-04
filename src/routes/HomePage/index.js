@@ -28,11 +28,14 @@ class HomePage extends Component {
     // });
     const { user_id } = this.props;
     const { data } = await addressServices.query_all({user_id});
-    if( data.length >0 ) {
+    console.log(data)
+    if( data.length>0 ) {
       let currect_address = data.filter(item => {return item.isDefault});
       currect_address = currect_address.length>0?currect_address[0]:data[0];
       saveLocalStorage({type:'deliveryAddress', value: JSON.stringify(currect_address)})
       saveLocalStorage({type:'address', value: JSON.stringify(data)})
+    }else {
+      saveLocalStorage({type:'deliveryAddress', value: '{}'})
     }
   }
   render() {
@@ -51,7 +54,7 @@ class HomePage extends Component {
           <Carousel list={carouselList} />
           <WhiteSpace size="lg" />
           <Title title={"为你推荐"} />
-          <WingBlank size="lg" >
+          <WingBlank size="lg" style={{width:'92%'}}>
             {loading?<Loading />:
               <Flex className={styles.productWrap} align="start" justify="between" wrap="wrap">
                 {recommend_list.map( item => (
